@@ -1,0 +1,15 @@
+[Ll]ibrary
+Logs
+Temp
+Cache
+.vs
+obj
+.vscode
+*.csproj
+*.unityproj
+*.sln
+Assets/Scenes/UIEditor.unity
+*.DS_Store
+**/*.DS_Sto
+
+

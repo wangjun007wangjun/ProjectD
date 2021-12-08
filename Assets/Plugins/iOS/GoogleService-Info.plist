@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>179486289762-bvbcq5frv12n0ekk39nnm976c442oe7d.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.179486289762-bvbcq5frv12n0ekk39nnm976c442oe7d</string>
+	<key>API_KEY</key>
+	<string>AIzaSyAbOnbxdFFR_wW9Ns5SimH5q2za0tRydIE</string>
+	<key>GCM_SENDER_ID</key>
+	<string>179486289762</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.ios.scratch.lotto.luckyday.luckylife.win</string>
+	<key>PROJECT_ID</key>
+	<string>everyday-wins</string>
+	<key>STORAGE_BUCKET</key>
+	<string>everyday-wins.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:179486289762:ios:9d96ad647d91c7255d063b</string>
+	<key>DATABASE_URL</key>
+	<string>https://everyday-wins.firebaseio.com</string>
+</dict>
+</plist>
