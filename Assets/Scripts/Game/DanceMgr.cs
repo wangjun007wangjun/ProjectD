@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using Engine.Schedule;
+using Engine.Asset;
 
 ///状态
 public enum ItemDanceState
@@ -158,5 +159,11 @@ public class DanceMgr : IScheduleHandler
         int randomX = Random.Range(intWeigthMin, intWeigthMax) * 100;
         int randomY = Random.Range(intHeightMin, intHeightMax) * 100;
         Debug.Log("随机点：" + randomX + "," +randomY);
+
+        BaseAsset obj = AssetService.GetInstance().LoadInstantiateAsset(C_danceItemPath, (int)LifeType.Manual);
+        _mainForm.SetItemInsert(obj.RootGo);
+        //演示卸载TODO
+        AssetService.GetInstance().Unload(obj);
+        obj = null;
     }
 }
