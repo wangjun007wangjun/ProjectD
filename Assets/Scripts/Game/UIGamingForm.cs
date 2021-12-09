@@ -23,7 +23,7 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
     private RectTransform _uiSafeAreaRectTransform;
 
     private uint _timer;
-    private int _countDown = 7;
+    private int _countDown = 4;
     public override string GetPath()
     {
         return "Gaming/UIGamingWnd";
@@ -48,25 +48,6 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
     protected override void OnInitialize(object param)
     {
         _timer = this.AddTimer(1000, true);
-
-        Vector3[] cor = new Vector3[4];
-        _uiSafeAreaRectTransform.GetLocalCorners(cor);
-
-        Hashtable table = new Hashtable();
-        int width = (int)Mathf.Ceil(_uiSafeAreaRectTransform.rect.width);
-        if (width % 2 == 1)
-        {
-            width += 1;
-        }
-        int height = (int)Mathf.Ceil(_uiSafeAreaRectTransform.rect.height);
-        if (height % 2 == 1)
-        {
-            height += 1;
-        }
-        table["width"] = width;
-        table["height"] = height;
-        table["corners"] = cor;
-        SendAction("UpdateSafeArea", table);
     }
 
     protected override void OnUninitialize()
@@ -85,12 +66,12 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
     {
         if (id == _timer)
         {
-            if (_countDown > 5)
+            if (_countDown >= 4)
             {
                 _uiCountDownTxtTMPText.text = "Ready!";
                 _countDown -= 1;
             }
-            else if (_countDown >= 0 && _countDown <= 5)
+            else if (_countDown >= 0 && _countDown <= 3)
             {
                 _uiCountDownTxtTMPText.text = _countDown.ToString();
                 _countDown -= 1;
@@ -104,8 +85,27 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
         }
     }
 
-    public void SetItemInsert(GameObject obj)
+    public Hashtable GetSafeAreaInfo()
     {
-        obj.transform.SetParent(_uiSafeAreaRectTransform);
+        Vector3[] cor = new Vector3[4];
+        _uiSafeAreaRectTransform.GetLocalCorners(cor);
+
+        Hashtable table = new Hashtable();
+        int width = (int)Mathf.Ceil(_uiSafeAreaRectTransform.rect.width);
+        if (width % 2 == 1)
+        {
+            width += 1;
+        }
+        int height = (int)Mathf.Ceil(_uiSafeAreaRectTransform.rect.height);
+        if (height % 2 == 1)
+        {
+            height += 1;
+        }
+        table["width"] = width;
+        table["height"] = height;
+        table["corners"] = cor;
+        // SendAction("UpdateSafeArea", table);
+
+        return table;
     }
 }

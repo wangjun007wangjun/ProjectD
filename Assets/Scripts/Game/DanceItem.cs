@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 using DG.Tweening;
 using UnityEngine.UI;
+using System;
+using Engine.Asset;
+using Engine.Schedule;
 
-public class DanceItem : MonoBehaviour
-{
-    private Vector3 originScale = Vector3.one * 1.8f;
+public class DanceItem : MonoBehaviour, IScheduleHandler
+{    
+    private Vector3 originScale = Vector3.one * 2.2f;
     public RectTransform scaleTran;
     public DOTweenAnimation dOTweenAnimation;
     public Button button;
@@ -17,6 +20,11 @@ public class DanceItem : MonoBehaviour
     private ItemDanceState curDanceState = ItemDanceState.None;
     private ItemDanceState lastDanceState = ItemDanceState.None;
     private bool isStart = false;
+
+    public Action OnClickAction;
+
+    private uint _unLoadTimer;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -70,6 +78,7 @@ public class DanceItem : MonoBehaviour
             }
             lastDanceState = curDanceState;
             //等待后回收自己TODO
+            _unLoadTimer = this.AddTimer(100, false);
         }
     }
     /// <summary>
@@ -98,5 +107,13 @@ public class DanceItem : MonoBehaviour
     private void OnBtnClick()
     {
         SetStateShow();
+    }
+
+    public void OnScheduleHandle(ScheduleType type, uint id)
+    {
+        if (id == _unLoadTimer)
+        {
+            OnClickAction();
+        }
     }
 }

@@ -26,10 +26,13 @@ public class GameState : IState
 
     public void OnStateEnter(object usrData = null)
     {
-        LoadDanceGame();
+        _danceMgr = new DanceMgr();
 
         GLog.LogD("Enter Gaming State");
         _gamingForm = UIFormHelper.CreateFormClass<UIGamingForm>(OnGamingAction, null, false);
+
+        //TODO
+        _danceMgr.Init(_gamingForm, GameDifficulty.Hard, _gamingForm.GetSafeAreaInfo());
     }
 
 
@@ -40,7 +43,6 @@ public class GameState : IState
             UIFormHelper.DisposeFormClass(_gamingForm);
             _gamingForm = null;
         }
-
     }
 
     public void OnStateChanged(string srcSt, string curSt, object usrData)
@@ -73,15 +75,5 @@ public class GameState : IState
             GLog.LogD("倒计时结束，可以开始游戏了");
             _danceMgr.BeginDanceGame();
         }
-        else if (key.Equals("UpdateSafeArea"))
-        {
-            _danceMgr.OnSetSafeInfo(param);
-        }
-    }
-
-    private void LoadDanceGame()
-    {
-        _danceMgr = new DanceMgr();
-        _danceMgr.Init(_gamingForm);
     }
 }
