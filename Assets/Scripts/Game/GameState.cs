@@ -14,6 +14,7 @@ public class GameState : IState
     private UIGamingForm _gamingForm;
 
     private DanceMgr _danceMgr;
+    private MusicData musicData;
     public void InitializeState()
     {
 
@@ -26,6 +27,8 @@ public class GameState : IState
 
     public void OnStateEnter(object usrData = null)
     {
+        musicData = usrData as MusicData;
+
         _danceMgr = new DanceMgr();
 
         GLog.LogD("Enter Gaming State");
@@ -33,6 +36,7 @@ public class GameState : IState
 
         //TODO
         _danceMgr.Init(_gamingForm, GameDifficulty.Hard, _gamingForm.GetSafeAreaInfo());
+        // _danceMgr.OnInitMusicEnv(musicData.audio);
     }
 
 
@@ -73,7 +77,7 @@ public class GameState : IState
         else if (key.Equals("StartGaming"))
         {
             GLog.LogD("倒计时结束，可以开始游戏了");
-            _danceMgr.BeginDanceGame();
+            _danceMgr.BeginDanceGame(musicData.audio);
         }
     }
 }

@@ -10,13 +10,14 @@ using Engine.UGUI;
 using Cfg;
 using Data;
 using UnityEngine;
+using Engine.Asset;
 
 namespace Lobby
 {
     public class LobbyState : IState
     {
         private UILobbyForm _lobbyForm;
-
+        private BaseAsset _lobbyAsset;
         public void InitializeState()
         {
         }
@@ -28,6 +29,11 @@ namespace Lobby
 
         public void OnStateEnter(object usrData = null)
         {
+            if (_lobbyAsset == null)
+            {
+                _lobbyAsset = AssetService.GetInstance().LoadInstantiateAsset("Lobby/LobbyEnv", LifeType.Manual);
+                _lobbyAsset.RootGo.SetActive(true);
+            }
             if (_lobbyForm == null)
             {
                 _lobbyForm = UIFormHelper.CreateFormClass<UILobbyForm>(OnLobbyFormAction, null, true);
@@ -42,14 +48,20 @@ namespace Lobby
         {
             if (key.Equals("EnterGaming"))
             {
+                MusicData data = param as MusicData;
                 Debug.Log("回调EnterGaming");
-                StateService.Instance.ChangeState(GConst.StateKey.Game);
+                StateService.Instance.ChangeState(GConst.StateKey.Game, data);
             }
         }
 
         public void OnStateLeave()
         {
             Debug.Log("离开主菜单");
+            if (_lobbyAsset != null)
+            {
+                AssetService.GetInstance().Unload(_lobbyAsset);
+                _lobbyAsset = null;
+            }
             _lobbyForm.ActiveForm(false);
         }
 

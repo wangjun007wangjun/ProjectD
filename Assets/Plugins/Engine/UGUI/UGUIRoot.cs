@@ -93,7 +93,7 @@ namespace Engine.UGUI
             Camera camera = cameraObject.AddComponent<Camera>();
             camera.orthographic = true;
             camera.orthographicSize = 50;
-            camera.clearFlags = CameraClearFlags.Color;
+            camera.clearFlags = CameraClearFlags.Depth;
 
             camera.cullingMask = 1 << Const_FormCameraMaskLayer;
             camera.depth = Const_FormCameraDepth;

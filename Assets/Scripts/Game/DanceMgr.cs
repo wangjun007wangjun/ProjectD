@@ -69,6 +69,12 @@ public class DanceMgr : IScheduleHandler
     private float[] mulNumBornInterval;
     private double startTime = 0;
     private double endTime = 0;
+
+
+
+    //场景相关
+    private BaseAsset danceRoot;
+    private MusicEnvMgr musicEnvMgr;
     public void Init(UIGamingForm form, GameDifficulty gameDiff, object param)
     {
         _gameDiff = gameDiff;
@@ -103,10 +109,20 @@ public class DanceMgr : IScheduleHandler
         _safeHeight = (int)table["height"];
 
         // Debug.Log("安全区高:" + _safeHeight + ",宽:" + _safeWidth + ",坐标：" + _cors.ToString());
+
+        danceRoot = AssetService.GetInstance().LoadInstantiateAsset("Gaming/DanceRoot", LifeType.Manual);
+        danceRoot.RootGo.SetActive(true);
+        musicEnvMgr = danceRoot.RootGo.GetComponent<MusicEnvMgr>();
     }
 
-    public void BeginDanceGame()
+    public void OnInitMusicEnv(AudioClip clip)
     {
+    }
+
+    public void BeginDanceGame(AudioClip clip)
+    {
+        musicEnvMgr.PlaySound(clip);
+
         //产生多少个
         // int clickCnt = 60;
         // float minInterval = 0.5f;
