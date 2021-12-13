@@ -71,10 +71,14 @@ public class DanceMgr : IScheduleHandler
     private double endTime = 0;
 
 
-
+    //总分数
+    private int totalScore;
+    private int[] scoreState;
     //场景相关
     private BaseAsset danceRoot;
     private MusicEnvMgr musicEnvMgr;
+
+    private uint createItemCorId;
     public void Init(UIGamingForm form, GameDifficulty gameDiff, object param)
     {
         _gameDiff = gameDiff;
@@ -83,18 +87,21 @@ public class DanceMgr : IScheduleHandler
             numChance = GameCfgConst.NumChance1;
             typeChance = GameCfgConst.TypeChance1;
             mulNumBornInterval = GameCfgConst.MulNumBornInterval1;
+            scoreState = GameCfgConst.AddScoreByState1;
         }
         else if (_gameDiff == GameDifficulty.Normal)
         {
             numChance = GameCfgConst.NumChance2;
             typeChance = GameCfgConst.TypeChance2;
             mulNumBornInterval = GameCfgConst.MulNumBornInterval2;
+            scoreState = GameCfgConst.AddScoreByState2;
         }
         else if (_gameDiff == GameDifficulty.Hard)
         {
             numChance = GameCfgConst.NumChance3;
             typeChance = GameCfgConst.TypeChance3;
             mulNumBornInterval = GameCfgConst.MulNumBornInterval3;
+            scoreState = GameCfgConst.AddScoreByState3;
         }
         //开始时间
         startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
@@ -198,7 +205,7 @@ public class DanceMgr : IScheduleHandler
         //2个及以上时，产生时间需要有间隔
         int bornNum = (int)(numE + 1);
         List<Vector4> posList = CreatePos(bornNum, typeE);
-        CorService.GetInstance().StartCoroutineSession(CreateDanceGrid(posList));
+        createItemCorId = CorService.GetInstance().StartCoroutineSession(CreateDanceGrid(posList));
     }
     private IEnumerator CreateDanceGrid(List<Vector4> posList)
     {
@@ -210,10 +217,12 @@ public class DanceMgr : IScheduleHandler
             Vector2 pos2 = new Vector2(posList[i].x, posList[i].y);
             DanceGrid grid1 = new DanceGrid();
             grid1.Born(new Vector2(posList[i].x, posList[i].y), safeArea.transform);
+            grid1.unSpawnAction = AddScore;
             if (posList[i].z != -1 && posList[i].w != -1)
             {
                 DanceGrid grid2 = new DanceGrid();
                 grid2.Born(new Vector2(posList[i].z, posList[i].w), safeArea.transform);
+                grid2.unSpawnAction = AddScore;
             }
             yield return new WaitForSeconds(UnityEngine.Random.Range(mulNumBornInterval[0], mulNumBornInterval[1]));
         }
@@ -296,7 +305,8 @@ public class DanceMgr : IScheduleHandler
                 DanceGrid grid = new DanceGrid();
             
                 grid.Born(pos, safeArea.transform);
-
+                grid.unSpawnAction = AddScore;
+                
                 existPos.Add(pos);
             } 
             while (!existPos.Contains(pos));
@@ -348,5 +358,22 @@ public class DanceMgr : IScheduleHandler
         // result.AddRange(originList);
         // Debug.Log("对称个数："+result.Count);
         return result;
+    }
+
+    public void AddScore(ItemDanceState state)
+    {
+        totalScore += scoreState[(int)state];
+        _mainForm.UpdateUI("UpdateScore", totalScore);
+    }
+
+    public void UnInit()
+    {
+        this.RemoveTimer(_chanceTimer);
+        CorService.GetInstance().StopCoroutineSession(createItemCorId);
+        if (danceRoot != null)
+        {
+            AssetService.GetInstance().Unload(danceRoot);
+            danceRoot = null;
+        }
     }
 }

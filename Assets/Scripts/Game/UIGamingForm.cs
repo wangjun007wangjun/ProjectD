@@ -11,16 +11,20 @@ using TMPro;
 using Engine.Schedule;
 using UnityEngine;
 using System.Collections;
+using Engine.State;
 
 public class UIGamingForm : UIFormClass, IScheduleHandler
 {
     private const int _uiExitBtnButtonIndex = 0;
     private const int _uiCountDownTxtTMPTextIndex = 1;
     private const int _uiSafeAreaRectTransformIndex = 2;
+    private const int _uiScoreTextIndex = 3;
 
     private Button _uiExitBtnButton;
     private TextMeshProUGUI _uiCountDownTxtTMPText;
     private RectTransform _uiSafeAreaRectTransform;
+    private Text _uiScoreText;
+
 
     private uint _timer;
     private int _countDown = 4;
@@ -33,10 +37,11 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
         _uiExitBtnButton = GetComponent(_uiExitBtnButtonIndex) as Button;
         _uiCountDownTxtTMPText = GetComponent(_uiCountDownTxtTMPTextIndex) as TextMeshProUGUI;
         _uiSafeAreaRectTransform = GetComponent(_uiSafeAreaRectTransformIndex) as RectTransform;
+        _uiScoreText = GetComponent(_uiScoreTextIndex) as Text;
 
         _uiExitBtnButton.onClick.AddListener(() =>
         {
-            SendAction("OnBtnExit");
+            StateService.Instance.ChangeState(GConst.StateKey.Lobby);
         });
     }
     protected override void OnResourceUnLoaded()
@@ -44,18 +49,26 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
         _uiExitBtnButton = null;
         _uiCountDownTxtTMPText = null;
         _uiSafeAreaRectTransform = null;
+        _uiScoreText = null;
+
     }
     protected override void OnInitialize(object param)
     {
         _timer = this.AddTimer(1000, true);
+        _uiScoreText.text = "0";
     }
 
     protected override void OnUninitialize()
     {
+        this.RemoveTimer(_timer);
     }
 
     protected override void OnUpdateUI(string id, object param)
     {
+        if (id.Equals("UpdateScore"))
+        {
+            _uiScoreText.text = ((int)param).ToString();
+        }
     }
     protected override void OnAction(string id, object param)
     {

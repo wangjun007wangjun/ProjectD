@@ -100,7 +100,7 @@ namespace Lobby
             LoopListViewItem2 item = listView.NewListViewItem("SelectItem");
             PrefabLink prefabLink = item.GetComponent<PrefabLink>();
 
-            (prefabLink.GetCacheComponent(1) as UIDynImage).SetImageAddr("");
+            (prefabLink.GetCacheComponent(1) as Image).sprite = itemData.musicTexture;
             (prefabLink.GetCacheComponent(2) as Text).text = "TODO" + index.ToString();
             (prefabLink.GetCacheComponent(7) as Text).text = itemData.name;
             Button button = (prefabLink.GetCacheComponent(3) as Button);
@@ -108,10 +108,6 @@ namespace Lobby
             GameObject star2 = prefabLink.GetCacheGameObject(5);
             GameObject star3 = prefabLink.GetCacheGameObject(6);
 
-            for (int i = 0; i < (int)(itemData.difficulty + 1); i++)
-            {
-
-            }
             star1.SetActive(false);
             star2.SetActive(false);
             star3.SetActive(false);

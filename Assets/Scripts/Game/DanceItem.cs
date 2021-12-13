@@ -9,7 +9,9 @@ using Engine.Schedule;
 
 public class DanceItem : MonoBehaviour, IScheduleHandler
 {    
-    private Vector3 originScale = Vector3.one * 2.2f;
+    private Vector3 originScale = Vector3.one * 3f;
+    public GameObject itemRoot;
+    public GameObject clickObj;
     public RectTransform scaleTran;
     public DOTweenAnimation dOTweenAnimation;
     public Button button;
@@ -21,7 +23,7 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
     private ItemDanceState lastDanceState = ItemDanceState.None;
     private bool isStart = false;
 
-    public Action OnClickAction;
+    public Action<ItemDanceState> OnClickAction;
 
     private uint _unLoadTimer;
 
@@ -103,9 +105,13 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
         goodObj.SetActive(false);
         coolObj.SetActive(false);
         perfaceObj.SetActive(false);
+        clickObj.SetActive(false);
+        itemRoot.SetActive(true);
     }
     private void OnBtnClick()
     {
+        clickObj.SetActive(true);
+        // itemRoot.SetActive(false);
         SetStateShow();
     }
 
@@ -113,7 +119,7 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
     {
         if (id == _unLoadTimer)
         {
-            OnClickAction();
+            OnClickAction(curDanceState);
         }
     }
 }

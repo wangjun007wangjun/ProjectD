@@ -23,4 +23,12 @@ public class GameCfgConst
     public static float[] MulNumBornInterval2 = new float[2]{0.1f, 0.3f};
     //困难难度产生多个球时的间隔
     public static float[] MulNumBornInterval3 = new float[2]{0.1f, 0.3f};
+
+
+    //简单难度各状态得分
+    public static int[] AddScoreByState1 = new int[5]{0, 0, 10, 50, 100};
+    //一般难度各状态得分
+    public static int[] AddScoreByState2 = new int[5]{0, 0, 50, 100, 200};
+    //困难难度各状态得分
+    public static int[] AddScoreByState3 = new int[5]{0, 0, 100, 150, 250};
 }

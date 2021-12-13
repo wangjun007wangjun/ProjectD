@@ -89,30 +89,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   list:
-  - musicTexture: {fileID: 2800000, guid: 86cca959a897ce946bb929fa408b744b, type: 3}
-    audio: {fileID: 8300000, guid: 7a09b5edd83140b458944cd7f872468f, type: 3}
+  - musicTexture: {fileID: 21300000, guid: 9c40af73ffa0a0f47a4aa7d25c684eaf, type: 3}
+    audio: {fileID: 8300000, guid: 2c3354490a4129c4ea800f5370aae9f5, type: 3}
     difficulty: 0
-    name: Traveling Light
-  - musicTexture: {fileID: 2800000, guid: 86cca959a897ce946bb929fa408b744b, type: 3}
+    name: SuMmeR
+  - musicTexture: {fileID: 21300000, guid: 481cbc0ef74a4a2499399c2c00b9d563, type: 3}
     audio: {fileID: 8300000, guid: 14fef40f9af07a7489b084c8ae8bfa19, type: 3}
     difficulty: 0
     name: One Last Time
-  - musicTexture: {fileID: 2800000, guid: 86cca959a897ce946bb929fa408b744b, type: 3}
-    audio: {fileID: 8300000, guid: 57280d3716df841f79b3525d39ba1408, type: 3}
+  - musicTexture: {fileID: 21300000, guid: 6e26a07c95c902a4c9e0e4f78c59292b, type: 3}
+    audio: {fileID: 8300000, guid: d906d219d7f8dd04d9e556b0ef55a233, type: 3}
     difficulty: 1
-    name: Mirror
-  - musicTexture: {fileID: 2800000, guid: 86cca959a897ce946bb929fa408b744b, type: 3}
+    name: Wolves
+  - musicTexture: {fileID: 21300000, guid: 2df8847969d697746b87830b79563bb6, type: 3}
     audio: {fileID: 8300000, guid: e1b2e687da899784bb5ceaea47665b9d, type: 3}
     difficulty: 1
     name: Forever Right Now
-  - musicTexture: {fileID: 2800000, guid: 86cca959a897ce946bb929fa408b744b, type: 3}
-    audio: {fileID: 8300000, guid: fe8139825de4d5a43a521f600df41fe4, type: 3}
+  - musicTexture: {fileID: 21300000, guid: b61cdfbd3883d4f46a84defedb16eba3, type: 3}
+    audio: {fileID: 8300000, guid: 2b108917b1e247c4e8c9aedc5efd9253, type: 3}
     difficulty: 2
-    name: Close To You
-  - musicTexture: {fileID: 2800000, guid: 86cca959a897ce946bb929fa408b744b, type: 3}
-    audio: {fileID: 8300000, guid: df5ceec74df2ad74aaab6e6dac31a93b, type: 3}
+    name: Flash Funk
+  - musicTexture: {fileID: 21300000, guid: 0c518d0ac3004ae42abcefa66cd07cfb, type: 3}
+    audio: {fileID: 8300000, guid: 445f4ad0b548c494981040bf9c6a7caf, type: 3}
     difficulty: 2
-    name: Kalimba
+    name: Chasing Colors
 --- !u!1 &3917613298594553378
 GameObject:
   m_ObjectHideFlags: 0
@@ -717,6 +717,10 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 3259316574432092415}
     m_Modifications:
+    - target: {fileID: 3681479349017425651, guid: 656329a41ce703b42b53922b45308a75, type: 3}
+      propertyPath: Elements.Array.data[1].Component
+      value: 
+      objectReference: {fileID: 1392914120348243857}
     - target: {fileID: 5479262438674950114, guid: 656329a41ce703b42b53922b45308a75, type: 3}
       propertyPath: m_Name
       value: SelectItem
@@ -821,3 +825,14 @@ RectTransform:
   m_CorrespondingSourceObject: {fileID: 6978537657720840216, guid: 656329a41ce703b42b53922b45308a75, type: 3}
   m_PrefabInstance: {fileID: 5535023866982151933}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1392914120348243857 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 6882901981904249196, guid: 656329a41ce703b42b53922b45308a75, type: 3}
+  m_PrefabInstance: {fileID: 5535023866982151933}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

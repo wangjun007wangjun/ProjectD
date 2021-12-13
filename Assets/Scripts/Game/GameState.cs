@@ -34,8 +34,7 @@ public class GameState : IState
         GLog.LogD("Enter Gaming State");
         _gamingForm = UIFormHelper.CreateFormClass<UIGamingForm>(OnGamingAction, null, false);
 
-        //TODO
-        _danceMgr.Init(_gamingForm, GameDifficulty.Hard, _gamingForm.GetSafeAreaInfo());
+        _danceMgr.Init(_gamingForm, musicData.difficulty, _gamingForm.GetSafeAreaInfo());
         // _danceMgr.OnInitMusicEnv(musicData.audio);
     }
 
@@ -47,6 +46,7 @@ public class GameState : IState
             UIFormHelper.DisposeFormClass(_gamingForm);
             _gamingForm = null;
         }
+        _danceMgr.UnInit();
     }
 
     public void OnStateChanged(string srcSt, string curSt, object usrData)

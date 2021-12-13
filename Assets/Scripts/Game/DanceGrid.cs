@@ -11,7 +11,7 @@ public class DanceGrid
     private string assetPath = "Gaming/DanceItem";
     private BaseAsset curAsset = null;
     private DanceItem danceItem = null;
-
+    public Action<ItemDanceState> unSpawnAction;
     public void Born(Vector2 pos, Transform parent)
     {
         curAsset = AssetService.GetInstance().LoadInstantiateAsset(assetPath, LifeType.Manual);
@@ -24,8 +24,12 @@ public class DanceGrid
         danceItem.OnClickAction = Destroy;
     }
 
-    public void Destroy()
+    public void Destroy(ItemDanceState state)
     {
+        if (unSpawnAction != null)
+        {
+            unSpawnAction(state);
+        }
         if (curAsset != null)
         {
             AssetService.GetInstance().Unload(curAsset);
