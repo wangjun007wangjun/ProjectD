@@ -60,6 +60,13 @@ public class MusicEnvMgr : MonoBehaviour
         }
 
     }
+    /// <summary>
+    /// This function is called when the MonoBehaviour will be destroyed.
+    /// </summary>
+    void OnDestroy()
+    {
+        StopSound();
+    }
     //传入音乐
     public void OnSetAudioClip(AudioClip clipT)
     {
@@ -86,11 +93,10 @@ public class MusicEnvMgr : MonoBehaviour
     void Update()
     {
         Visulization();
-        if (Input.GetMouseButtonDown(0))
-        {
+        // if (Input.GetMouseButtonDown(0))
+        // {
             // PlaySound();
-        }
-        // MusicSlider();
+        // }
         DynamicColor();
     }
     void Visulization()
@@ -123,6 +129,11 @@ public class MusicEnvMgr : MonoBehaviour
         CameraStartMove();
     }
 
+    public void StopSound()
+    {
+        audio.Stop();
+        StopCameraMove();
+    }
     void DynamicColor()
     {
         if (gridColorChange)

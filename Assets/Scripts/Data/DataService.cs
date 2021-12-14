@@ -14,22 +14,24 @@ namespace Data
         private static readonly string S_SaveDir = Engine.Res.FileUtil.CombinePath(Engine.Res.FileUtil.GetCachePath(), "GameData");
         //用户信息自己
         public UserInfo Me;
-        
+        public ScoreData Score;
         public override bool Initialize()
         {
             Me = new UserInfo();
-            
+            Score = new ScoreData();
             return true;
         }
 
         public override void Uninitialize()
         {
             Me = null;
+            Score = null;
         }
 
         public void ResetData()
         {
             Me = new UserInfo();
+            Score = new ScoreData();
         }
 
         public void DelLocalSaveData()

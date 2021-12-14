@@ -137,7 +137,7 @@ namespace Engine.Asset
                         Sprite ss = ba.Resource.Content as Sprite;
                         if (ss == null)
                         {
-                            JWLog.LogD("SpriteAsset Load From AB Is Texture2D Type");
+                            GGLog.LogD("SpriteAsset Load From AB Is Texture2D Type");
                             Texture2D tt1 = ba.Resource.Content as Texture2D;
                             ast.SpriteObj = Sprite.Create(tt1, new Rect(0, 0, tt1.width, tt1.height), new Vector2(0.5f, 0.5f));
                         }

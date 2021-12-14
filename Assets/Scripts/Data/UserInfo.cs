@@ -10,7 +10,7 @@ namespace Data
     public class UserInfo
     {
         //服务器 玩家Id
-        public int PlayerId = -1;
+        public int PlayerId = 1;
     }
 }
 

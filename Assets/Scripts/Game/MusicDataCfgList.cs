@@ -10,6 +10,7 @@ public class MusicDataCfgList:MonoBehaviour
 [Serializable]
 public class MusicData
 {
+    public int id;
     public Sprite musicTexture;
     public AudioClip audio;
     public GameDifficulty difficulty;

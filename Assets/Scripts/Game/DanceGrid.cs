@@ -11,7 +11,7 @@ public class DanceGrid
     private string assetPath = "Gaming/DanceItem";
     private BaseAsset curAsset = null;
     private DanceItem danceItem = null;
-    public Action<ItemDanceState> unSpawnAction;
+    public Action<ItemDanceState> AddScoreAction;
     public void Born(Vector2 pos, Transform parent)
     {
         curAsset = AssetService.GetInstance().LoadInstantiateAsset(assetPath, LifeType.Manual);
@@ -22,14 +22,11 @@ public class DanceGrid
 
         danceItem = curAsset.RootGo.GetComponent<DanceItem>();
         danceItem.OnClickAction = Destroy;
+        danceItem.OnAddScoreAction = AddScoreAction;
     }
 
-    public void Destroy(ItemDanceState state)
+    public void Destroy()
     {
-        if (unSpawnAction != null)
-        {
-            unSpawnAction(state);
-        }
         if (curAsset != null)
         {
             AssetService.GetInstance().Unload(curAsset);

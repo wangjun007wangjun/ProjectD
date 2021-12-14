@@ -58,6 +58,7 @@ namespace Lobby
             _timerFrame2 = this.AddFrame(1, true);
 
             _uiScrollViewLoopListView2.InitListView(-1, OnRefreshListItem);
+            _uiScrollViewLoopListView2.MovePanelToItemIndex(0, 0);
             // _uiScrollViewLoopListView2.InitListView(_uiBgMusicDataCfgList.list.Count, OnRefreshListItem);
         }
 
@@ -89,7 +90,7 @@ namespace Lobby
         {
             if (index < 0)
             {
-                return null;
+                index = _uiBgMusicDataCfgList.list.Count + ((index+1) % _uiBgMusicDataCfgList.list.Count) -1;
             }
             int indexTemp = index % _uiBgMusicDataCfgList.list.Count;
             MusicData itemData = _uiBgMusicDataCfgList.list[indexTemp];
@@ -101,7 +102,7 @@ namespace Lobby
             PrefabLink prefabLink = item.GetComponent<PrefabLink>();
 
             (prefabLink.GetCacheComponent(1) as Image).sprite = itemData.musicTexture;
-            (prefabLink.GetCacheComponent(2) as Text).text = "TODO" + index.ToString();
+            (prefabLink.GetCacheComponent(2) as Text).text = "Best Score:" + DataService.GetInstance().Score.GetScoreInfoById(index).ToString();
             (prefabLink.GetCacheComponent(7) as Text).text = itemData.name;
             Button button = (prefabLink.GetCacheComponent(3) as Button);
             GameObject star1 = prefabLink.GetCacheGameObject(4);

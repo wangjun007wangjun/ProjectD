@@ -8,7 +8,8 @@ using Engine.Base;
 using UnityEngine;
 using UnityEngine.Events;
 using UnityEngine.EventSystems;
-
+using Engine.Asset;
+using Engine.Res;
 namespace Engine.UGUI
 {
     [AddComponentMenu("Engine/UGUI/UIButton")]

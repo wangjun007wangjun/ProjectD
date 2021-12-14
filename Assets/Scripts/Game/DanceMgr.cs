@@ -46,6 +46,7 @@ public enum GameDifficulty
 public class DanceMgr : IScheduleHandler
 {
     private const string C_danceItemPath = "Gaming/DanceItem";
+    private GameState gameState;
     private UIGamingForm _mainForm;
     private GameObject safeArea;
 
@@ -72,15 +73,16 @@ public class DanceMgr : IScheduleHandler
 
 
     //总分数
-    private int totalScore;
+    private int totalScore = 0;
     private int[] scoreState;
     //场景相关
     private BaseAsset danceRoot;
     private MusicEnvMgr musicEnvMgr;
 
     private uint createItemCorId;
-    public void Init(UIGamingForm form, GameDifficulty gameDiff, object param)
+    public void Init(GameState state, UIGamingForm form, GameDifficulty gameDiff, object param, AudioClip clip)
     {
+        gameState = state;
         _gameDiff = gameDiff;
         if (_gameDiff == GameDifficulty.Easy)
         {
@@ -103,10 +105,7 @@ public class DanceMgr : IScheduleHandler
             mulNumBornInterval = GameCfgConst.MulNumBornInterval3;
             scoreState = GameCfgConst.AddScoreByState3;
         }
-        //开始时间
-        startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
-        endTime = startTime + _audioLength * 1000;
-        
+
         _mainForm = form;
         safeArea = _mainForm.RootPLink.GetCacheGameObject(0);
 
@@ -120,16 +119,26 @@ public class DanceMgr : IScheduleHandler
         danceRoot = AssetService.GetInstance().LoadInstantiateAsset("Gaming/DanceRoot", LifeType.Manual);
         danceRoot.RootGo.SetActive(true);
         musicEnvMgr = danceRoot.RootGo.GetComponent<MusicEnvMgr>();
-    }
 
-    public void OnInitMusicEnv(AudioClip clip)
-    {
-    }
+        _audioLength = clip.length;
+        //开始时间
+        startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
+        endTime = startTime + _audioLength * 1000;
 
-    public void BeginDanceGame(AudioClip clip)
-    {
         musicEnvMgr.PlaySound(clip);
+    }
+    //再来一次
+    public void ReTry(AudioClip clip)
+    {
+        _audioLength = clip.length;
 
+         //开始时间
+        startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
+        endTime = startTime + _audioLength * 1000;
+        musicEnvMgr.PlaySound(clip);
+    }
+    public void BeginDanceGame()
+    {
         //产生多少个
         // int clickCnt = 60;
         // float minInterval = 0.5f;
@@ -153,7 +162,7 @@ public class DanceMgr : IScheduleHandler
             //时间间隔也是随机值
             int[] intervalArr = new int[2] { 500, 3000 };
             int next = UnityEngine.Random.Range(intervalArr[0], intervalArr[1]);
-            
+
             double curDataTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
             double nextDataTime = curDataTime + next + 1;
             // Debug.Log("下次时间："+ next);
@@ -166,6 +175,8 @@ public class DanceMgr : IScheduleHandler
             {
                 this.RemoveTimer(_chanceTimer);
                 //TODO结束了
+                musicEnvMgr.StopSound();
+                gameState.OnFinishDance(totalScore);
             }
         }
     }
@@ -209,30 +220,30 @@ public class DanceMgr : IScheduleHandler
     }
     private IEnumerator CreateDanceGrid(List<Vector4> posList)
     {
-        float[] mulNumBornInterval = new float[2]{0, 0.3f};
+        float[] mulNumBornInterval = new float[2] { 0, 0.3f };
         for (int i = 0; i < posList.Count; i++)
         {
             // Debug.Log("坐标x:"+posList[i].x+",y:"+posList[i].y+",z:"+posList[i].z+",w:"+posList[i].z);
             Vector2 pos1 = new Vector2(posList[i].x, posList[i].y);
             Vector2 pos2 = new Vector2(posList[i].x, posList[i].y);
             DanceGrid grid1 = new DanceGrid();
+            grid1.AddScoreAction = AddScore;
             grid1.Born(new Vector2(posList[i].x, posList[i].y), safeArea.transform);
-            grid1.unSpawnAction = AddScore;
             if (posList[i].z != -1 && posList[i].w != -1)
             {
                 DanceGrid grid2 = new DanceGrid();
+                grid2.AddScoreAction = AddScore;
                 grid2.Born(new Vector2(posList[i].z, posList[i].w), safeArea.transform);
-                grid2.unSpawnAction = AddScore;
             }
             yield return new WaitForSeconds(UnityEngine.Random.Range(mulNumBornInterval[0], mulNumBornInterval[1]));
         }
         yield return null;
     }
-    
+
     //产生位置，num个数,Vector4,前两个为半边屏幕，后2个为半边屏幕的
     private List<Vector4> CreatePos(int num, BornType bornType)
     {
-        Debug.Log("个数："+num+" 类型："+bornType.ToString());
+        // Debug.Log("个数："+num+" 类型："+bornType.ToString());
         List<Vector4> result = new List<Vector4>();
 
         int intWeigthMin = Mathf.CeilToInt(_cors[1].x / 100);
@@ -246,46 +257,46 @@ public class DanceMgr : IScheduleHandler
         //2个及以上时，产生时间需要有间隔
         // if (num <= 2)
         // {
-            for (int i = 0; i < num; i++)
+        for (int i = 0; i < num; i++)
+        {
+            int randCnt = 0;
+            do
             {
-                int randCnt = 0;
-                do
-                {
-                    int randomX = UnityEngine.Random.Range(intWeigthMin, intWeigthMax) * 100;
-                    int randomY = UnityEngine.Random.Range(intHeightMin, intHeightMax) * 100;
-                    // Debug.Log("随机点：" + randomX + "," +randomY);
-                    pos = new Vector2(randomX, randomY);
-                    existPos.Add(pos);
+                int randomX = UnityEngine.Random.Range(intWeigthMin, intWeigthMax) * 100;
+                int randomY = UnityEngine.Random.Range(intHeightMin, intHeightMax) * 100;
+                // Debug.Log("随机点：" + randomX + "," +randomY);
+                pos = new Vector2(randomX, randomY);
+                existPos.Add(pos);
 
-                    result.Add(new Vector4(randomX, randomY, -1, -1));
+                result.Add(new Vector4(randomX, randomY, -1, -1));
 
-                    randCnt += 1;
-                } 
-                while ((!existPos.Contains(pos)) || randCnt > 3);
+                randCnt += 1;
             }
-            if (bornType != BornType.None)
+            while ((!existPos.Contains(pos)) || randCnt > 3);
+        }
+        if (bornType != BornType.None)
+        {
+            //得出对称点
+            List<Vector2> other = GetSymmetricPos(existPos, bornType);
+            for (int i = 0; i < other.Count; i++)
             {
-                //得出对称点
-                List<Vector2> other = GetSymmetricPos(existPos, bornType);
-                for (int i = 0; i < other.Count; i++)
+                if (other[i].x == result[i].x && other[i].y == result[i].y)
                 {
-                    if (other[i].x == result[i].x && other[i].y == result[i].y)
-                    {
-                    }
-                    else
-                    {
-                        // Debug.Log("设置对称x:"+other[i].x +",y:"+other[i].y);
-                        result[i] = new Vector4(result[i].x, result[i].y, other[i].x, other[i].y);
-                    }
+                }
+                else
+                {
+                    // Debug.Log("设置对称x:"+other[i].x +",y:"+other[i].y);
+                    result[i] = new Vector4(result[i].x, result[i].y, other[i].x, other[i].y);
                 }
             }
+        }
         // }
-        return result;   
+        return result;
     }
 
     private IEnumerator CreateDanceGrid(int num)
     {
-        float[] mulNumBornInterval = new float[2]{0, 0.3f};
+        float[] mulNumBornInterval = new float[2] { 0, 0.3f };
         int intWeigthMin = Mathf.CeilToInt(_cors[1].x / 100);
         int intWeigthMax = Mathf.CeilToInt(_cors[3].x / 100);
         int intHeightMin = Mathf.CeilToInt(_cors[1].y / 100);
@@ -299,16 +310,16 @@ public class DanceMgr : IScheduleHandler
             {
                 int randomX = UnityEngine.Random.Range(intWeigthMin, intWeigthMax) * 100;
                 int randomY = UnityEngine.Random.Range(intHeightMin, intHeightMax) * 100;
-                Debug.Log("随机点：" + randomX + "," +randomY);
+                Debug.Log("随机点：" + randomX + "," + randomY);
                 pos = new Vector2(randomX, randomY);
 
                 DanceGrid grid = new DanceGrid();
-            
+                grid.AddScoreAction = AddScore;
+
                 grid.Born(pos, safeArea.transform);
-                grid.unSpawnAction = AddScore;
-                
+
                 existPos.Add(pos);
-            } 
+            }
             while (!existPos.Contains(pos));
             if (num != 1)
             {
@@ -333,7 +344,7 @@ public class DanceMgr : IScheduleHandler
                 Vector2 pos = new Vector2(originList[i].x * -1, originList[i].y);
                 // if (!originList.Contains(pos))
                 // {
-                    result.Add(pos);
+                result.Add(pos);
                 // }
             }
             else if (bornType == BornType.Ver)
@@ -342,7 +353,7 @@ public class DanceMgr : IScheduleHandler
 
                 // if (!originList.Contains(pos))
                 // {
-                    result.Add(pos);
+                result.Add(pos);
                 // }
             }
             else if (bornType == BornType.Fork)
@@ -351,7 +362,7 @@ public class DanceMgr : IScheduleHandler
 
                 // if (!originList.Contains(pos))
                 // {
-                    result.Add(pos);
+                result.Add(pos);
                 // }
             }
         }
@@ -362,6 +373,7 @@ public class DanceMgr : IScheduleHandler
 
     public void AddScore(ItemDanceState state)
     {
+        Debug.Log("加分状态："+state.ToString()+ " 分数：" +(scoreState[(int)state]).ToString());
         totalScore += scoreState[(int)state];
         _mainForm.UpdateUI("UpdateScore", totalScore);
     }

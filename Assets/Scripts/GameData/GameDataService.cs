@@ -5,10 +5,11 @@
 *********************************************************************/
 using UnityEngine;
 using System;
+using Engine.Base;
 
 namespace GameData
 {
-    public class GameDataService 
+    public class GameDataService : Singleton<GameDataService>
     {
         //游戏数据本地缓存目录
         private static readonly string S_SaveDir = Engine.Res.FileUtil.CombinePath(Engine.Res.FileUtil.GetCachePath(), "GameData");
@@ -30,6 +31,11 @@ namespace GameData
             string jsonData = JsonUtility.ToJson(obj);
             byte[] byteData = System.Text.Encoding.UTF8.GetBytes(jsonData);
             Engine.Res.FileUtil.WriteFile(savePath, byteData, true);
+        }
+
+        public override bool Initialize()
+        {
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -59,6 +65,11 @@ namespace GameData
                 GLog.LogE(ex.ToString());
                 throw (ex);
             }
+        }
+
+        public override void Uninitialize()
+        {
+            throw new NotImplementedException();
         }
     }
 }

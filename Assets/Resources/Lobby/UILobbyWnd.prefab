@@ -89,27 +89,33 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   list:
-  - musicTexture: {fileID: 21300000, guid: 9c40af73ffa0a0f47a4aa7d25c684eaf, type: 3}
+  - id: 0
+    musicTexture: {fileID: 21300000, guid: 9c40af73ffa0a0f47a4aa7d25c684eaf, type: 3}
     audio: {fileID: 8300000, guid: 2c3354490a4129c4ea800f5370aae9f5, type: 3}
     difficulty: 0
     name: SuMmeR
-  - musicTexture: {fileID: 21300000, guid: 481cbc0ef74a4a2499399c2c00b9d563, type: 3}
+  - id: 1
+    musicTexture: {fileID: 21300000, guid: 481cbc0ef74a4a2499399c2c00b9d563, type: 3}
     audio: {fileID: 8300000, guid: 14fef40f9af07a7489b084c8ae8bfa19, type: 3}
     difficulty: 0
     name: One Last Time
-  - musicTexture: {fileID: 21300000, guid: 6e26a07c95c902a4c9e0e4f78c59292b, type: 3}
+  - id: 2
+    musicTexture: {fileID: 21300000, guid: 6e26a07c95c902a4c9e0e4f78c59292b, type: 3}
     audio: {fileID: 8300000, guid: d906d219d7f8dd04d9e556b0ef55a233, type: 3}
     difficulty: 1
     name: Wolves
-  - musicTexture: {fileID: 21300000, guid: 2df8847969d697746b87830b79563bb6, type: 3}
+  - id: 3
+    musicTexture: {fileID: 21300000, guid: 2df8847969d697746b87830b79563bb6, type: 3}
     audio: {fileID: 8300000, guid: e1b2e687da899784bb5ceaea47665b9d, type: 3}
     difficulty: 1
     name: Forever Right Now
-  - musicTexture: {fileID: 21300000, guid: b61cdfbd3883d4f46a84defedb16eba3, type: 3}
+  - id: 4
+    musicTexture: {fileID: 21300000, guid: b61cdfbd3883d4f46a84defedb16eba3, type: 3}
     audio: {fileID: 8300000, guid: 2b108917b1e247c4e8c9aedc5efd9253, type: 3}
     difficulty: 2
     name: Flash Funk
-  - musicTexture: {fileID: 21300000, guid: 0c518d0ac3004ae42abcefa66cd07cfb, type: 3}
+  - id: 5
+    musicTexture: {fileID: 21300000, guid: 0c518d0ac3004ae42abcefa66cd07cfb, type: 3}
     audio: {fileID: 8300000, guid: 445f4ad0b548c494981040bf9c6a7caf, type: 3}
     difficulty: 2
     name: Chasing Colors

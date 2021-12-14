@@ -8,6 +8,7 @@ using Engine.UGUI;
 using Engine.Schedule;
 using UnityEngine;
 using Net;
+using System.Collections;
 
 public class GameState : IState
 {
@@ -34,7 +35,7 @@ public class GameState : IState
         GLog.LogD("Enter Gaming State");
         _gamingForm = UIFormHelper.CreateFormClass<UIGamingForm>(OnGamingAction, null, false);
 
-        _danceMgr.Init(_gamingForm, musicData.difficulty, _gamingForm.GetSafeAreaInfo());
+        _danceMgr.Init(this, _gamingForm, musicData.difficulty, _gamingForm.GetSafeAreaInfo(), musicData.audio);
         // _danceMgr.OnInitMusicEnv(musicData.audio);
     }
 
@@ -77,7 +78,18 @@ public class GameState : IState
         else if (key.Equals("StartGaming"))
         {
             GLog.LogD("倒计时结束，可以开始游戏了");
-            _danceMgr.BeginDanceGame(musicData.audio);
+            _danceMgr.BeginDanceGame();
         }
+        else if (key.Equals("ReContinueGameTimer"))
+        {
+            _danceMgr.ReTry(musicData.audio);
+        }
+    }
+    public void OnFinishDance(int totalScore)
+    {
+        Hashtable table = new Hashtable();
+        table["MusicData"] = musicData;
+        table["CurScore"] = totalScore;
+        _gamingForm.UpdateUI("OnShowResult", table);
     }
 }

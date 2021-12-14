@@ -23,7 +23,8 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
     private ItemDanceState lastDanceState = ItemDanceState.None;
     private bool isStart = false;
 
-    public Action<ItemDanceState> OnClickAction;
+    public Action OnClickAction;
+    public Action<ItemDanceState> OnAddScoreAction;
 
     private uint _unLoadTimer;
 
@@ -55,10 +56,11 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
         else
         {
             curDanceState = ItemDanceState.Fail;
-            SetStateShow();
+            isStart = false;
+            SetStateShow(false);
         }
     }
-    private void SetStateShow()
+    private void SetStateShow(bool isClick)
     {
         if (curDanceState != lastDanceState)
         {
@@ -80,7 +82,14 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
             }
             lastDanceState = curDanceState;
             //等待后回收自己TODO
-            _unLoadTimer = this.AddTimer(100, false);
+            if (isClick)
+            {
+                _unLoadTimer = this.AddTimer(600, false);
+            }
+            else
+            {
+                _unLoadTimer = this.AddTimer(100, false);
+            }
         }
     }
     /// <summary>
@@ -111,15 +120,17 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
     private void OnBtnClick()
     {
         clickObj.SetActive(true);
-        // itemRoot.SetActive(false);
-        SetStateShow();
+        itemRoot.SetActive(false);
+        isStart = false;
+        OnAddScoreAction(curDanceState);
+        SetStateShow(true);
     }
 
     public void OnScheduleHandle(ScheduleType type, uint id)
     {
         if (id == _unLoadTimer)
         {
-            OnClickAction(curDanceState);
+            OnClickAction();
         }
     }
 }

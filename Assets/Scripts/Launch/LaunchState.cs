@@ -8,6 +8,7 @@ using Engine.UGUI;
 using Engine.Schedule;
 using UnityEngine;
 using Net;
+using Data;
 
 public class LaunchState : IState, IScheduleHandler
 {
@@ -30,6 +31,8 @@ public class LaunchState : IState, IScheduleHandler
         GLog.LogD("Enter Launch Game State");
         _launchForm = UIFormHelper.CreateFormClass<UILaunchForm>(null, null, false);
         _launchTimer = this.AddTimer(2000, false);
+
+        DataService.GetInstance().Score.Load();
     }
 
 
