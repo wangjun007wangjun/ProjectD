@@ -41,6 +41,7 @@ namespace Lobby
             else
             {
                 _lobbyForm.ActiveForm(true);
+                _lobbyForm.UpdateUI("RefreshAll", null);
             }
         }
 
@@ -49,14 +50,14 @@ namespace Lobby
             if (key.Equals("EnterGaming"))
             {
                 MusicData data = param as MusicData;
-                Debug.Log("回调EnterGaming");
+                // Debug.Log("回调EnterGaming");
                 StateService.Instance.ChangeState(GConst.StateKey.Game, data);
             }
         }
 
         public void OnStateLeave()
         {
-            Debug.Log("离开主菜单");
+            // Debug.Log("离开主菜单");
             if (_lobbyAsset != null)
             {
                 AssetService.GetInstance().Unload(_lobbyAsset);

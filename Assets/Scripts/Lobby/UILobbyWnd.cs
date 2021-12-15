@@ -81,6 +81,10 @@ namespace Lobby
 
         protected override void OnUpdateUI(string id, object param)
         {
+            if (id.Equals("RefreshAll"))
+            {
+                _uiScrollViewLoopListView2.RefreshAllShownItem();
+            }
         }
         protected override void OnAction(string id, object param)
         {
@@ -102,7 +106,7 @@ namespace Lobby
             PrefabLink prefabLink = item.GetComponent<PrefabLink>();
 
             (prefabLink.GetCacheComponent(1) as Image).sprite = itemData.musicTexture;
-            (prefabLink.GetCacheComponent(2) as Text).text = "Best Score:" + DataService.GetInstance().Score.GetScoreInfoById(index).ToString();
+            (prefabLink.GetCacheComponent(2) as Text).text = "Best Score:" + DataService.GetInstance().Score.GetScoreInfoById(itemData.id).ToString();
             (prefabLink.GetCacheComponent(7) as Text).text = itemData.name;
             Button button = (prefabLink.GetCacheComponent(3) as Button);
             GameObject star1 = prefabLink.GetCacheGameObject(4);

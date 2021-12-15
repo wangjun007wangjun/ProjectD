@@ -61,6 +61,7 @@ public class DanceMgr : IScheduleHandler
     private float _audioLength = 120f;    //音乐时长,秒
 
     private uint _chanceTimer;
+    private uint _showResultTimer;
 
     //配置
     //每个个数球出现的概率
@@ -174,10 +175,14 @@ public class DanceMgr : IScheduleHandler
             else
             {
                 this.RemoveTimer(_chanceTimer);
-                //TODO结束了
-                musicEnvMgr.StopSound();
-                gameState.OnFinishDance(totalScore);
+                _showResultTimer = this.AddTimer(1500, false);
             }
+        }
+        else if (id == _showResultTimer)
+        {
+            //TODO结束了
+            musicEnvMgr.StopSound();
+            gameState.OnFinishDance(totalScore);
         }
     }
 
@@ -373,7 +378,7 @@ public class DanceMgr : IScheduleHandler
 
     public void AddScore(ItemDanceState state)
     {
-        Debug.Log("加分状态："+state.ToString()+ " 分数：" +(scoreState[(int)state]).ToString());
+        // Debug.Log("加分状态："+state.ToString()+ " 分数：" +(scoreState[(int)state]).ToString());
         totalScore += scoreState[(int)state];
         _mainForm.UpdateUI("UpdateScore", totalScore);
     }
