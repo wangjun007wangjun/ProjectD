@@ -22,7 +22,7 @@ public class MusicEnvMgr : MonoBehaviour
     [Range(0, 1)]
     public float v = 1;
     private float musicLength;
-    private AudioSource audio;
+    private AudioSource audio = null;
 
     private int colorPropertyId = Shader.PropertyToID("_Color");
     private bool gridColorChange = true;
@@ -32,13 +32,13 @@ public class MusicEnvMgr : MonoBehaviour
     private List<Transform> cameraPos = new List<Transform>();
 
     private bool isCameraMove = false;
+    private bool isPause = false;
     /// <summary>
     /// Awake is called when the script instance is being loaded.
     /// </summary>
     void Awake()
     {
         // audio = GetComponent<AudioSource>();
-        audio = AudioService.GetInstance().Worker.M1;
         for (int i = 0; i < cameraPosPar.childCount; i++)
         {
             cameraPos.Add(cameraPosPar.GetChild(i).transform);
@@ -94,12 +94,15 @@ public class MusicEnvMgr : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        Visulization();
-        // if (Input.GetMouseButtonDown(0))
-        // {
-            // PlaySound();
-        // }
-        DynamicColor();
+        if(isPause)
+        {
+            return;
+        }
+        if(audio != null)
+        {
+            Visulization();
+            DynamicColor();
+        }
     }
     void Visulization()
     {
@@ -122,6 +125,11 @@ public class MusicEnvMgr : MonoBehaviour
         musicLength = audio.time;
         musicSlider.value = musicLength / audio.clip.length;
     }
+    //
+    public void OnSetGameEnablePause(bool isP)
+    {
+        isPause = isP;
+    }
     public void PlaySound(AudioClip clip)
     {
         audio.clip = clip;
@@ -135,7 +143,11 @@ public class MusicEnvMgr : MonoBehaviour
         Debug.Log("音乐名字："+clipName);
         // audio.clip = clip;
         AudioService.GetInstance().Play(AudioChannelType.MUSIC, clipName, false);
-        AudioService.GetInstance().SetVolumeByChannel(1, AudioService.GetInstance().GetVolumeByChannel(1));
+        // AudioService.GetInstance().SetVolumeByChannel(1, AudioService.GetInstance().GetVolumeByChannel(1));
+        // if(audio == null)
+        // {
+            audio = AudioService.GetInstance().Worker.GetCurMusicSource();
+        // }
 
         // audio.Play();
         //TODO

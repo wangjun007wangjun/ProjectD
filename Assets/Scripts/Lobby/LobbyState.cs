@@ -11,6 +11,7 @@ using Cfg;
 using Data;
 using UnityEngine;
 using Engine.Asset;
+using Engine.Audio;
 
 namespace Lobby
 {
@@ -49,6 +50,7 @@ namespace Lobby
         {
             if (key.Equals("EnterGaming"))
             {
+                // AudioService.GetInstance().UnloadAudioClipCache();
                 MusicData data = param as MusicData;
                 // Debug.Log("回调EnterGaming");
                 StateService.Instance.ChangeState(GConst.StateKey.Game, data);

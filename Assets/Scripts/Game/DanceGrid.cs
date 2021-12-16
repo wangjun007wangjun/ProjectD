@@ -17,7 +17,7 @@ public class DanceGrid
         curAsset = AssetService.GetInstance().LoadInstantiateAsset(assetPath, LifeType.Manual);
         curAsset.RootTf.SetParent(parent);
         curAsset.RootTf.localPosition = pos;
-        curAsset.RootTf.localScale = Vector3.one;
+        curAsset.RootTf.localScale = Vector3.one * 1.5f;
         curAsset.RootGo.SetActive(true);
 
         danceItem = curAsset.RootGo.GetComponent<DanceItem>();

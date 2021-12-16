@@ -22,7 +22,6 @@ public class LobbyEnv : MonoBehaviour
     void Awake()
     {
         // audio = GetComponent<AudioSource>();
-        audio = AudioService.GetInstance().Worker.M1;
     }
 
     /// <summary>
@@ -31,6 +30,10 @@ public class LobbyEnv : MonoBehaviour
     /// </summary>
     void Start()
     {
+        PlaySound();
+
+        audio = AudioService.GetInstance().Worker.GetCurMusicSource();
+
         for (int i = 0; i < 10; i++)
         {
             GameObject cubeT = Instantiate(temp) as GameObject;
@@ -43,7 +46,6 @@ public class LobbyEnv : MonoBehaviour
 
             materials.Add(cubeT.transform.GetChild(0).GetComponent<MeshRenderer>());
         }
-        PlaySound();
         StartCoroutine(GridOn());
         Debug.Log("大厅播放");
     }
@@ -89,7 +91,7 @@ public class LobbyEnv : MonoBehaviour
         // audio.clip = clip;
 
         // audio.Play();
-        AudioService.GetInstance().Play(AudioChannelType.MUSIC, "Mp3/Hard/Kalimba", true);
+        AudioService.GetInstance().Play(AudioChannelType.MUSIC, "Mp3/CloseToYou", true);
         // AudioService.GetInstance().SetVolumeByChannel(1, AudioService.GetInstance().GetVolumeByChannel(1));
     }
 

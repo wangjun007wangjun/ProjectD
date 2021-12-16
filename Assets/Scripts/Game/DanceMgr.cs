@@ -213,10 +213,10 @@ public class DanceMgr : IScheduleHandler
         }
         //位置
         //将安全区宽，高处100，作为随机index
-        // int intWeigthMin = Mathf.CeilToInt(_cors[1].x / 100);
-        // int intWeigthMax = Mathf.CeilToInt(_cors[3].x / 100);
-        // int intHeightMin = Mathf.CeilToInt(_cors[1].y / 100);
-        // int intHeightMax = Mathf.CeilToInt(_cors[3].y / 100);
+        // int intWeigthMin = Mathf.CeilToInt(_cors[1].x / 150);
+        // int intWeigthMax = Mathf.CeilToInt(_cors[3].x / 150);
+        // int intHeightMin = Mathf.CeilToInt(_cors[1].y / 150);
+        // int intHeightMax = Mathf.CeilToInt(_cors[3].y / 150);
         // Debug.Log("宽高随机范围：" + intWeigthMin + "," +intWeigthMax + "," + intHeightMin + "," +intWeigthMax);
 
         //如果小于等于2个，位置完全随机，否则3个及以上，位置需要为连续线段
@@ -253,10 +253,10 @@ public class DanceMgr : IScheduleHandler
         // Debug.Log("个数："+num+" 类型："+bornType.ToString());
         List<Vector4> result = new List<Vector4>();
 
-        int intWeigthMin = Mathf.CeilToInt(_cors[1].x / 100);
-        int intWeigthMax = Mathf.CeilToInt(_cors[3].x / 100);
-        int intHeightMin = Mathf.CeilToInt(_cors[1].y / 100);
-        int intHeightMax = Mathf.CeilToInt(_cors[3].y / 100);
+        int intWeigthMin = Mathf.CeilToInt(_cors[1].x / 150);
+        int intWeigthMax = Mathf.CeilToInt(_cors[3].x / 150);
+        int intHeightMin = Mathf.CeilToInt(_cors[1].y / 150);
+        int intHeightMax = Mathf.CeilToInt(_cors[3].y / 150);
 
         List<Vector2> existPos = new List<Vector2>();
         Vector2 pos = new Vector2(-1, -1);
@@ -269,8 +269,8 @@ public class DanceMgr : IScheduleHandler
             int randCnt = 0;
             do
             {
-                int randomX = UnityEngine.Random.Range(intWeigthMin, intWeigthMax) * 100;
-                int randomY = UnityEngine.Random.Range(intHeightMin, intHeightMax) * 100;
+                int randomX = UnityEngine.Random.Range(intWeigthMin, intWeigthMax) * 150;
+                int randomY = UnityEngine.Random.Range(intHeightMin, intHeightMax) * 150;
                 // Debug.Log("随机点：" + randomX + "," +randomY);
                 pos = new Vector2(randomX, randomY);
                 existPos.Add(pos);
@@ -304,10 +304,10 @@ public class DanceMgr : IScheduleHandler
     private IEnumerator CreateDanceGrid(int num)
     {
         float[] mulNumBornInterval = new float[2] { 0, 0.3f };
-        int intWeigthMin = Mathf.CeilToInt(_cors[1].x / 100);
-        int intWeigthMax = Mathf.CeilToInt(_cors[3].x / 100);
-        int intHeightMin = Mathf.CeilToInt(_cors[1].y / 100);
-        int intHeightMax = Mathf.CeilToInt(_cors[3].y / 100);
+        int intWeigthMin = Mathf.CeilToInt(_cors[1].x / 150);
+        int intWeigthMax = Mathf.CeilToInt(_cors[3].x / 150);
+        int intHeightMin = Mathf.CeilToInt(_cors[1].y / 150);
+        int intHeightMax = Mathf.CeilToInt(_cors[3].y / 150);
 
         List<Vector2> existPos = new List<Vector2>();
         Vector2 pos = new Vector2(-1, -1);
@@ -315,8 +315,8 @@ public class DanceMgr : IScheduleHandler
         {
             do
             {
-                int randomX = UnityEngine.Random.Range(intWeigthMin, intWeigthMax) * 100;
-                int randomY = UnityEngine.Random.Range(intHeightMin, intHeightMax) * 100;
+                int randomX = UnityEngine.Random.Range(intWeigthMin, intWeigthMax) * 150;
+                int randomY = UnityEngine.Random.Range(intHeightMin, intHeightMax) * 150;
                 Debug.Log("随机点：" + randomX + "," + randomY);
                 pos = new Vector2(randomX, randomY);
 
@@ -394,5 +394,10 @@ public class DanceMgr : IScheduleHandler
             AssetService.GetInstance().Unload(danceRoot);
             danceRoot = null;
         }
+    }
+
+    public void OnSetMusicEnvPause(bool pause)
+    {
+        musicEnvMgr.OnSetGameEnablePause(pause);
     }
 }

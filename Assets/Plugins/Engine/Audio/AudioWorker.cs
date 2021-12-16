@@ -259,7 +259,10 @@ namespace Engine.Audio
                 _curMusicSource.UnPause();
             }
         }
-
+        public AudioSource GetCurMusicSource()
+        {
+            return _curMusicSource;
+        }
         public void SetChannelVolume(uint eChannelType, float vv)
         {
             if (Mixer == null)

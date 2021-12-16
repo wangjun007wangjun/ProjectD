@@ -6,7 +6,7 @@ public class GameCfgConst
     //一般难度产生球的概率
     public static float[,] NumChance2 = new float[5, 2] { { 0, 0.8f }, { 0.8f, 0.9f }, { 0.9f, 1f }, { -1, -1 }, { -1, -1 } }; 
     //困难难度产生球的概率
-    public static float[,] NumChance3 = new float[5, 2] { { 0, 0.6f }, { 0.6f, 0.8f }, { 0.8f, 0.9f }, { 0.9f, 0.95f }, { 0.95f, 1f } }; 
+    public static float[,] NumChance3 = new float[5, 2] { { 0, 0.7f }, { 0.7f, 0.85f }, { 0.85f, 0.9f }, { 0.95f, 1f }, { -1, -1 } }; 
     
     
     //简单难度产生球的类型概率

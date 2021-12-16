@@ -48,6 +48,7 @@ public class GameState : IState
             _gamingForm = null;
         }
         _danceMgr.UnInit();
+        // DoToween.KillAll();
     }
 
     public void OnStateChanged(string srcSt, string curSt, object usrData)
@@ -83,6 +84,11 @@ public class GameState : IState
         else if (key.Equals("ReContinueGameTimer"))
         {
             _danceMgr.ReTry(musicData);
+        }
+        else if(key.Equals("GamePause"))
+        {
+            bool isPause = (bool) param;
+            _danceMgr.OnSetMusicEnvPause(isPause);
         }
     }
     public void OnFinishDance(int totalScore)

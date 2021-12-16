@@ -27,12 +27,14 @@ private const int _uiBestScoreTextIndex = 7;
 private const int _uiCurScoreTextIndex = 8;
 private const int _uiExitButtonIndex = 9;
 private const int _uiReContinueButtonIndex = 10;
-private const int _uiAudioSettingBtnRectTransformIndex = 11;
+private const int _uiAudioSettingBtnButtonIndex = 11;
 private const int _uiMusicSliderSliderIndex = 12;
 private const int _uiSoundSliderSliderIndex = 13;
 private const int _uiAudioBtnButtonIndex = 14;
 private const int _uiPauseBtnButtonIndex = 15;
 private const int _uiPlayBtnButtonIndex = 16;
+private const int _uiPausePanelRectTransformIndex = 17;
+private const int _uiContinueBigBtnButtonIndex = 18;
 
 private Button _uiExitBtnButton;
 private TextMeshProUGUI _uiCountDownTxtTMPText;
@@ -51,6 +53,9 @@ private Slider _uiSoundSliderSlider;
 private Button _uiAudioBtnButton;
 private Button _uiPauseBtnButton;
 private Button _uiPlayBtnButton;
+private RectTransform _uiPausePanelRectTransform;
+private Button _uiContinueBigBtnButton;
+
 
 
 
@@ -62,7 +67,7 @@ private Button _uiPlayBtnButton;
     }
     protected override void OnResourceLoaded()
     {
-        _uiExitBtnButton = GetComponent(_uiExitBtnButtonIndex)as Button;
+_uiExitBtnButton = GetComponent(_uiExitBtnButtonIndex)as Button;
 _uiCountDownTxtTMPText = GetComponent(_uiCountDownTxtTMPTextIndex)as TextMeshProUGUI;
 _uiSafeAreaRectTransform = GetComponent(_uiSafeAreaRectTransformIndex)as RectTransform;
 _uiScoreText = GetComponent(_uiScoreTextIndex)as Text;
@@ -73,12 +78,14 @@ _uiBestScoreText = GetComponent(_uiBestScoreTextIndex)as Text;
 _uiCurScoreText = GetComponent(_uiCurScoreTextIndex)as Text;
 _uiExitButton = GetComponent(_uiExitButtonIndex)as Button;
 _uiReContinueButton = GetComponent(_uiReContinueButtonIndex)as Button;
-_uiAudioSettingBtnButton = GetComponent(_uiAudioSettingBtnRectTransformIndex)as Button;
+_uiAudioSettingBtnButton = GetComponent(_uiAudioSettingBtnButtonIndex)as Button;
 _uiMusicSliderSlider = GetComponent(_uiMusicSliderSliderIndex)as Slider;
 _uiSoundSliderSlider = GetComponent(_uiSoundSliderSliderIndex)as Slider;
 _uiAudioBtnButton = GetComponent(_uiAudioBtnButtonIndex)as Button;
 _uiPauseBtnButton = GetComponent(_uiPauseBtnButtonIndex)as Button;
 _uiPlayBtnButton = GetComponent(_uiPlayBtnButtonIndex)as Button;
+_uiPausePanelRectTransform = GetComponent(_uiPausePanelRectTransformIndex)as RectTransform;
+_uiContinueBigBtnButton = GetComponent(_uiContinueBigBtnButtonIndex)as Button;
 
         _uiExitBtnButton.onClick.AddListener(() =>
         {
@@ -120,19 +127,33 @@ _uiPlayBtnButton = GetComponent(_uiPlayBtnButtonIndex)as Button;
                 Time.timeScale = 0;
                 _uiPlayBtnButton.gameObject.SetActive(true);
                 _uiPauseBtnButton.gameObject.SetActive(false);
+                _uiPausePanelRectTransform.gameObject.SetActive(true);
 
                 AudioService.GetInstance().StopChannel(1);
+                SendAction("GamePause", true);
             });
             _uiPlayBtnButton.onClick.AddListener(() =>{
                 Time.timeScale = 1;
                 _uiPlayBtnButton.gameObject.SetActive(false);
                 _uiPauseBtnButton.gameObject.SetActive(true);
                 AudioService.GetInstance().ContinueChannel(1);
+
+                SendAction("GamePause", false);
             });
+            _uiContinueBigBtnButton.onClick.AddListener(() =>{
+                Time.timeScale = 1;
+                _uiPlayBtnButton.gameObject.SetActive(false);
+                _uiPausePanelRectTransform.gameObject.SetActive(false);
+                _uiPauseBtnButton.gameObject.SetActive(true);
+                AudioService.GetInstance().ContinueChannel(1);
+
+                SendAction("GamePause", false);
+            });
+            
     }
     protected override void OnResourceUnLoaded()
     {
-        _uiExitBtnButton = null;
+_uiExitBtnButton = null;
 _uiCountDownTxtTMPText = null;
 _uiSafeAreaRectTransform = null;
 _uiScoreText = null;
@@ -149,6 +170,8 @@ _uiSoundSliderSlider = null;
 _uiAudioBtnButton = null;
 _uiPauseBtnButton = null;
 _uiPlayBtnButton = null;
+_uiPausePanelRectTransform = null;
+_uiContinueBigBtnButton = null;
 
     }
     protected override void OnInitialize(object param)
