@@ -107,8 +107,8 @@ MonoBehaviour:
   startX: -250
   startY: 0
   startZ: -250
-  mainColor: {r: 0.69070524, g: 0.014489633, b: 0.9852941, a: 1}
-  subColor: {r: 0, g: 0.37931037, b: 1, a: 1}
+  mainColor: {r: 0.69070524, g: 0.014489633, b: 0.9852941, a: 0.6392157}
+  subColor: {r: 0, g: 0.37931037, b: 1, a: 0.6666667}
 --- !u!81 &5193831709751371327
 AudioListener:
   m_ObjectHideFlags: 0
@@ -301,15 +301,15 @@ AudioSource:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 5413435532071547947}
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
-  Loop: 0
-  Mute: 0
+  Loop: 1
+  Mute: 1
   Spatialize: 0
   SpatializePostEffects: 0
   Priority: 128

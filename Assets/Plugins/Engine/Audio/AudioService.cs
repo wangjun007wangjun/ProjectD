@@ -34,10 +34,10 @@ namespace Engine.Audio
         private float _lastEFVolume = 1.0f;
         private float _lastVoiceVolume = 0.8f;
 
-        private float _curMusicVolume = 0.0f;
-        private float _curUIVolume = 0.0f;
-        private float _curEFVolume = 0.0f;
-        private float _curVoiceVolume = 0.0f;
+        private float _curMusicVolume = 1f;
+        private float _curUIVolume = 1f;
+        private float _curEFVolume = 1f;
+        private float _curVoiceVolume = 1f;
         private bool _lock = false;
 
         //音效资源缓存 缓存UI 和特效的
@@ -47,10 +47,18 @@ namespace Engine.Audio
         //动态音效播放
         private ObjDictionary<int, DAudio> _dAudioDic;
         private int _dAudioIndex = 0;
+        public AudioWorker Worker
+        {
+            get
+            {
+                return _worker;
+            }
+        }
+
 
         public override bool Initialize()
         {
-            _workAsset = AssetService.GetInstance().LoadInstantiateAsset("Fixed/AudioWorker",LifeType.Manual);
+            _workAsset = AssetService.GetInstance().LoadInstantiateAsset("Fixed/AudioWorker", LifeType.Manual);
             if (_workAsset != null)
             {
                 _workAsset.RootGo.ExtDontDestroyOnLoad();
@@ -65,13 +73,13 @@ namespace Engine.Audio
 
             if (PlayerPrefs.HasKey(System.Enum.GetName(typeof(AudioChannelType), AudioChannelType.MUSIC)))
             {
-                float volume = PlayerPrefs.GetFloat(System.Enum.GetName(typeof(AudioChannelType), AudioChannelType.MUSIC));
+                float volume = PlayerPrefs.GetFloat(System.Enum.GetName(typeof(AudioChannelType), AudioChannelType.MUSIC), 1);
                 _curMusicVolume = volume;
             }
 
             if (PlayerPrefs.HasKey(System.Enum.GetName(typeof(AudioChannelType), AudioChannelType.UI)))
             {
-                float volume = PlayerPrefs.GetFloat(System.Enum.GetName(typeof(AudioChannelType), AudioChannelType.UI));
+                float volume = PlayerPrefs.GetFloat(System.Enum.GetName(typeof(AudioChannelType), AudioChannelType.UI), 1);
                 _curUIVolume = volume;
             }
 
@@ -279,6 +287,30 @@ namespace Engine.Audio
             }
         }
 
+        //继续某个通道
+        public void ContinueChannel(uint eChannelType)
+        {
+            if (_worker == null)
+            {
+                return;
+            }
+            AudioChannelType tt = (AudioChannelType)eChannelType;
+            if (tt == AudioChannelType.MUSIC)
+            {
+                _worker.UnPauseMusic();
+            }
+            else if (tt == AudioChannelType.EF)
+            {
+
+            }
+            else if (tt == AudioChannelType.UI)
+            {
+
+            }
+            else if (tt == AudioChannelType.VOICE)
+            {
+            }
+        }
         //关闭所有通道声音
         public void CloseAll()
         {

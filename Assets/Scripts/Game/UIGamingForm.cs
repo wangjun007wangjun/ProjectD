@@ -12,32 +12,45 @@ using Engine.Schedule;
 using UnityEngine;
 using System.Collections;
 using Engine.State;
+using Engine.Audio;
 
 public class UIGamingForm : UIFormClass, IScheduleHandler
 {
-    private const int _uiExitBtnButtonIndex = 0;
-    private const int _uiCountDownTxtTMPTextIndex = 1;
-    private const int _uiSafeAreaRectTransformIndex = 2;
-    private const int _uiScoreTextIndex = 3;
-    private const int _uiResultPanelRectTransformIndex = 4;
-    private const int _uiMusicPicImageIndex = 5;
-    private const int _uiMusicNameTextIndex = 6;
-    private const int _uiBestScoreTextIndex = 7;
-    private const int _uiCurScoreTextIndex = 8;
-    private const int _uiExitButtonIndex = 9;
-    private const int _uiReContinueButtonIndex = 10;
+private const int _uiExitBtnButtonIndex = 0;
+private const int _uiCountDownTxtTMPTextIndex = 1;
+private const int _uiSafeAreaRectTransformIndex = 2;
+private const int _uiScoreTextIndex = 3;
+private const int _uiResultPanelRectTransformIndex = 4;
+private const int _uiMusicPicImageIndex = 5;
+private const int _uiMusicNameTextIndex = 6;
+private const int _uiBestScoreTextIndex = 7;
+private const int _uiCurScoreTextIndex = 8;
+private const int _uiExitButtonIndex = 9;
+private const int _uiReContinueButtonIndex = 10;
+private const int _uiAudioSettingBtnRectTransformIndex = 11;
+private const int _uiMusicSliderSliderIndex = 12;
+private const int _uiSoundSliderSliderIndex = 13;
+private const int _uiAudioBtnButtonIndex = 14;
+private const int _uiPauseBtnButtonIndex = 15;
+private const int _uiPlayBtnButtonIndex = 16;
 
-    private Button _uiExitBtnButton;
-    private TextMeshProUGUI _uiCountDownTxtTMPText;
-    private RectTransform _uiSafeAreaRectTransform;
-    private Text _uiScoreText;
-    private RectTransform _uiResultPanelRectTransform;
-    private Image _uiMusicPicImage;
-    private Text _uiMusicNameText;
-    private Text _uiBestScoreText;
-    private Text _uiCurScoreText;
-    private Button _uiExitButton;
-    private Button _uiReContinueButton;
+private Button _uiExitBtnButton;
+private TextMeshProUGUI _uiCountDownTxtTMPText;
+private RectTransform _uiSafeAreaRectTransform;
+private Text _uiScoreText;
+private RectTransform _uiResultPanelRectTransform;
+private Image _uiMusicPicImage;
+private Text _uiMusicNameText;
+private Text _uiBestScoreText;
+private Text _uiCurScoreText;
+private Button _uiExitButton;
+private Button _uiReContinueButton;
+private Button _uiAudioSettingBtnButton;
+private Slider _uiMusicSliderSlider;
+private Slider _uiSoundSliderSlider;
+private Button _uiAudioBtnButton;
+private Button _uiPauseBtnButton;
+private Button _uiPlayBtnButton;
 
 
 
@@ -49,17 +62,23 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
     }
     protected override void OnResourceLoaded()
     {
-        _uiExitBtnButton = GetComponent(_uiExitBtnButtonIndex) as Button;
-        _uiCountDownTxtTMPText = GetComponent(_uiCountDownTxtTMPTextIndex) as TextMeshProUGUI;
-        _uiSafeAreaRectTransform = GetComponent(_uiSafeAreaRectTransformIndex) as RectTransform;
-        _uiScoreText = GetComponent(_uiScoreTextIndex) as Text;
-        _uiResultPanelRectTransform = GetComponent(_uiResultPanelRectTransformIndex) as RectTransform;
-        _uiMusicPicImage = GetComponent(_uiMusicPicImageIndex) as Image;
-        _uiMusicNameText = GetComponent(_uiMusicNameTextIndex) as Text;
-        _uiBestScoreText = GetComponent(_uiBestScoreTextIndex) as Text;
-        _uiCurScoreText = GetComponent(_uiCurScoreTextIndex) as Text;
-        _uiExitButton = GetComponent(_uiExitButtonIndex) as Button;
-        _uiReContinueButton = GetComponent(_uiReContinueButtonIndex) as Button;
+        _uiExitBtnButton = GetComponent(_uiExitBtnButtonIndex)as Button;
+_uiCountDownTxtTMPText = GetComponent(_uiCountDownTxtTMPTextIndex)as TextMeshProUGUI;
+_uiSafeAreaRectTransform = GetComponent(_uiSafeAreaRectTransformIndex)as RectTransform;
+_uiScoreText = GetComponent(_uiScoreTextIndex)as Text;
+_uiResultPanelRectTransform = GetComponent(_uiResultPanelRectTransformIndex)as RectTransform;
+_uiMusicPicImage = GetComponent(_uiMusicPicImageIndex)as Image;
+_uiMusicNameText = GetComponent(_uiMusicNameTextIndex)as Text;
+_uiBestScoreText = GetComponent(_uiBestScoreTextIndex)as Text;
+_uiCurScoreText = GetComponent(_uiCurScoreTextIndex)as Text;
+_uiExitButton = GetComponent(_uiExitButtonIndex)as Button;
+_uiReContinueButton = GetComponent(_uiReContinueButtonIndex)as Button;
+_uiAudioSettingBtnButton = GetComponent(_uiAudioSettingBtnRectTransformIndex)as Button;
+_uiMusicSliderSlider = GetComponent(_uiMusicSliderSliderIndex)as Slider;
+_uiSoundSliderSlider = GetComponent(_uiSoundSliderSliderIndex)as Slider;
+_uiAudioBtnButton = GetComponent(_uiAudioBtnButtonIndex)as Button;
+_uiPauseBtnButton = GetComponent(_uiPauseBtnButtonIndex)as Button;
+_uiPlayBtnButton = GetComponent(_uiPlayBtnButtonIndex)as Button;
 
         _uiExitBtnButton.onClick.AddListener(() =>
         {
@@ -76,20 +95,60 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
             _timer = this.AddTimer(1000, true);
             _uiScoreText.text = "0";
         });
+
+        _uiAudioBtnButton.onClick.AddListener(() =>
+            {
+                Debug.Log("点击音量");
+                _uiAudioSettingBtnButton.gameObject.SetActive(true);
+                _uiMusicSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(1) / 1.0f;
+                _uiSoundSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(2) / 1.0f;
+            });
+            _uiAudioSettingBtnButton.onClick.AddListener(() =>
+            {
+                _uiAudioSettingBtnButton.gameObject.SetActive(false);
+            });
+            _uiMusicSliderSlider.onValueChanged.AddListener(delegate (float a)
+            {
+                AudioService.GetInstance().SetVolumeByChannel(1, a);
+            });
+            _uiSoundSliderSlider.onValueChanged.AddListener(delegate (float a)
+            {
+                AudioService.GetInstance().SetVolumeByChannel(2, a);
+            });
+
+            _uiPauseBtnButton.onClick.AddListener(() =>{
+                Time.timeScale = 0;
+                _uiPlayBtnButton.gameObject.SetActive(true);
+                _uiPauseBtnButton.gameObject.SetActive(false);
+
+                AudioService.GetInstance().StopChannel(1);
+            });
+            _uiPlayBtnButton.onClick.AddListener(() =>{
+                Time.timeScale = 1;
+                _uiPlayBtnButton.gameObject.SetActive(false);
+                _uiPauseBtnButton.gameObject.SetActive(true);
+                AudioService.GetInstance().ContinueChannel(1);
+            });
     }
     protected override void OnResourceUnLoaded()
     {
         _uiExitBtnButton = null;
-        _uiCountDownTxtTMPText = null;
-        _uiSafeAreaRectTransform = null;
-        _uiScoreText = null;
-        _uiResultPanelRectTransform = null;
-        _uiMusicPicImage = null;
-        _uiMusicNameText = null;
-        _uiBestScoreText = null;
-        _uiCurScoreText = null;
-        _uiExitButton = null;
-        _uiReContinueButton = null;
+_uiCountDownTxtTMPText = null;
+_uiSafeAreaRectTransform = null;
+_uiScoreText = null;
+_uiResultPanelRectTransform = null;
+_uiMusicPicImage = null;
+_uiMusicNameText = null;
+_uiBestScoreText = null;
+_uiCurScoreText = null;
+_uiExitButton = null;
+_uiReContinueButton = null;
+_uiAudioSettingBtnButton = null;
+_uiMusicSliderSlider = null;
+_uiSoundSliderSlider = null;
+_uiAudioBtnButton = null;
+_uiPauseBtnButton = null;
+_uiPlayBtnButton = null;
 
     }
     protected override void OnInitialize(object param)

@@ -12,43 +12,70 @@ using SuperScrollView;
 using Engine.PLink;
 using Engine.Schedule;
 using System.Collections;
+using Engine.Audio;
 
 namespace Lobby
 {
     public class UILobbyForm : UIFormClass, IScheduleHandler
     {
-        private const int _uiStartBtnButtonIndex = 0;
+        private const int _uiAudioBtnButtonIndex = 0;
         private const int _uiScrollViewLoopListView2Index = 1;
         private const int _uiBgMusicDataCfgListIndex = 2;
+        private const int _uiMusicSliderSliderIndex = 3;
+        private const int _uiSoundSliderSliderIndex = 4;
+        private const int _uiAudioSettingBtnButtonIndex = 5;
 
-        private Button _uiStartBtnButton;
+        private Button _uiAudioBtnButton;
         private LoopListView2 _uiScrollViewLoopListView2;
         private MusicDataCfgList _uiBgMusicDataCfgList;
-
-
+        private Slider _uiMusicSliderSlider;
+        private Slider _uiSoundSliderSlider;
+        private Button _uiAudioSettingBtnButton;
 
         private uint _timerFrame2;
+
+
         public override string GetPath()
         {
             return "Lobby/UILobbyWnd";
         }
         protected override void OnResourceLoaded()
         {
-            _uiStartBtnButton = GetComponent(_uiStartBtnButtonIndex) as Button;
+            _uiAudioBtnButton = GetComponent(_uiAudioBtnButtonIndex) as Button;
             _uiScrollViewLoopListView2 = GetComponent(_uiScrollViewLoopListView2Index) as LoopListView2;
             _uiBgMusicDataCfgList = GetComponent(_uiBgMusicDataCfgListIndex) as MusicDataCfgList;
+            _uiMusicSliderSlider = GetComponent(_uiMusicSliderSliderIndex) as Slider;
+            _uiSoundSliderSlider = GetComponent(_uiSoundSliderSliderIndex) as Slider;
+            _uiAudioSettingBtnButton = GetComponent(_uiAudioSettingBtnButtonIndex) as Button;
 
-            _uiStartBtnButton.onClick.AddListener(() =>
+            _uiAudioBtnButton.onClick.AddListener(() =>
             {
-                Debug.Log("点击开始");
-                SendAction("EnterGaming");
+                Debug.Log("点击音量");
+                _uiAudioSettingBtnButton.gameObject.SetActive(true);
+                _uiMusicSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(1) / 1.0f;
+                _uiSoundSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(2) / 1.0f;
+            });
+            _uiAudioSettingBtnButton.onClick.AddListener(() =>
+            {
+                _uiAudioSettingBtnButton.gameObject.SetActive(false);
+            });
+            _uiMusicSliderSlider.onValueChanged.AddListener(delegate (float a)
+            {
+                AudioService.GetInstance().SetVolumeByChannel(1, a);
+            });
+            _uiSoundSliderSlider.onValueChanged.AddListener(delegate (float a)
+            {
+                AudioService.GetInstance().SetVolumeByChannel(2, a);
             });
         }
         protected override void OnResourceUnLoaded()
         {
-            _uiStartBtnButton = null;
+            _uiAudioBtnButton = null;
             _uiScrollViewLoopListView2 = null;
             _uiBgMusicDataCfgList = null;
+            _uiMusicSliderSlider = null;
+            _uiSoundSliderSlider = null;
+            _uiAudioSettingBtnButton = null;
 
         }
         protected override void OnInitialize(object param)
@@ -94,7 +121,7 @@ namespace Lobby
         {
             if (index < 0)
             {
-                index = _uiBgMusicDataCfgList.list.Count + ((index+1) % _uiBgMusicDataCfgList.list.Count) -1;
+                index = _uiBgMusicDataCfgList.list.Count + ((index + 1) % _uiBgMusicDataCfgList.list.Count) - 1;
             }
             int indexTemp = index % _uiBgMusicDataCfgList.list.Count;
             MusicData itemData = _uiBgMusicDataCfgList.list[indexTemp];

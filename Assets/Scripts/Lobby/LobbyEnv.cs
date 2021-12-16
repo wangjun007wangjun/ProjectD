@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Engine.Audio;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -20,7 +21,8 @@ public class LobbyEnv : MonoBehaviour
 
     void Awake()
     {
-        audio = GetComponent<AudioSource>();
+        // audio = GetComponent<AudioSource>();
+        audio = AudioService.GetInstance().Worker.M1;
     }
 
     /// <summary>
@@ -43,6 +45,22 @@ public class LobbyEnv : MonoBehaviour
         }
         PlaySound();
         StartCoroutine(GridOn());
+        Debug.Log("大厅播放");
+    }
+    /// <summary>
+    /// This function is called when the object becomes enabled and active.
+    /// </summary>
+    void OnEnable()
+    {
+
+    }
+    /// <summary>
+    /// This function is called when the behaviour becomes disabled or inactive.
+    /// </summary>
+    void OnDisable()
+    {
+        StopCoroutine(GridOn());
+        StopCoroutine(GridOff());
     }
     // Update is called once per frame
     void Update()
@@ -60,7 +78,7 @@ public class LobbyEnv : MonoBehaviour
             MaterialPropertyBlock block = new MaterialPropertyBlock();
             // block.SetColor(colorPropertyId, HSVtoRGB(spectrumData[i] * colorMultiplayer, s, v, 1));
 
-            block.SetColor(colorPropertyId, new Vector4(Mathf.Lerp(materials[i].material.color.r, spectrumData[i] * 500f, 0.2f), 0.5f, 1f, 1f));
+            block.SetColor(colorPropertyId, new Vector4(Mathf.Lerp(materials[i].material.color.r, spectrumData[i] * 500f, 0.2f), 0.5f, 1f, 0.5f));
 
             materials[i].SetPropertyBlock(block);
             i++;
@@ -68,9 +86,11 @@ public class LobbyEnv : MonoBehaviour
     }
     public void PlaySound()
     {
-        audio.clip = clip;
+        // audio.clip = clip;
 
-        audio.Play();
+        // audio.Play();
+        AudioService.GetInstance().Play(AudioChannelType.MUSIC, "Mp3/Hard/Kalimba", true);
+        // AudioService.GetInstance().SetVolumeByChannel(1, AudioService.GetInstance().GetVolumeByChannel(1));
     }
 
     void DynamicColor()

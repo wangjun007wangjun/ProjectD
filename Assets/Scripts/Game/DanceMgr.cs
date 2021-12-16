@@ -81,7 +81,7 @@ public class DanceMgr : IScheduleHandler
     private MusicEnvMgr musicEnvMgr;
 
     private uint createItemCorId;
-    public void Init(GameState state, UIGamingForm form, GameDifficulty gameDiff, object param, AudioClip clip)
+    public void Init(GameState state, UIGamingForm form, GameDifficulty gameDiff, object param, MusicData musicData)
     {
         gameState = state;
         _gameDiff = gameDiff;
@@ -121,22 +121,24 @@ public class DanceMgr : IScheduleHandler
         danceRoot.RootGo.SetActive(true);
         musicEnvMgr = danceRoot.RootGo.GetComponent<MusicEnvMgr>();
 
-        _audioLength = clip.length;
+        _audioLength = musicData.audio.length;
         //开始时间
         startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
         endTime = startTime + _audioLength * 1000;
-
-        musicEnvMgr.PlaySound(clip);
+        // musicEnvMgr.PlaySound(string.Format("Mp3/%s/%s",musicData.difficulty.ToString(), musicData.audio.name));
+        musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
     }
     //再来一次
-    public void ReTry(AudioClip clip)
+    public void ReTry(MusicData musicData)
     {
-        _audioLength = clip.length;
+        _audioLength = musicData.audio.length;
 
          //开始时间
         startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
         endTime = startTime + _audioLength * 1000;
-        musicEnvMgr.PlaySound(clip);
+        // musicEnvMgr.PlaySound(clip);
+        // musicEnvMgr.PlaySound(string.Format("Mp3/%s/%s",musicData.difficulty.ToString(), musicData.audio.name));
+        musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
     }
     public void BeginDanceGame()
     {

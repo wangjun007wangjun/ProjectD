@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
+using Engine.Audio;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -36,7 +37,8 @@ public class MusicEnvMgr : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        audio = GetComponent<AudioSource>();
+        // audio = GetComponent<AudioSource>();
+        audio = AudioService.GetInstance().Worker.M1;
         for (int i = 0; i < cameraPosPar.childCount; i++)
         {
             cameraPos.Add(cameraPosPar.GetChild(i).transform);
@@ -125,6 +127,17 @@ public class MusicEnvMgr : MonoBehaviour
         audio.clip = clip;
 
         audio.Play();
+        //TODO
+        CameraStartMove();
+    }
+    public void PlaySound(string  clipName)
+    {
+        Debug.Log("音乐名字："+clipName);
+        // audio.clip = clip;
+        AudioService.GetInstance().Play(AudioChannelType.MUSIC, clipName, false);
+        AudioService.GetInstance().SetVolumeByChannel(1, AudioService.GetInstance().GetVolumeByChannel(1));
+
+        // audio.Play();
         //TODO
         CameraStartMove();
     }

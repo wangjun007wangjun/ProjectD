@@ -35,7 +35,7 @@ public class GameState : IState
         GLog.LogD("Enter Gaming State");
         _gamingForm = UIFormHelper.CreateFormClass<UIGamingForm>(OnGamingAction, null, false);
 
-        _danceMgr.Init(this, _gamingForm, musicData.difficulty, _gamingForm.GetSafeAreaInfo(), musicData.audio);
+        _danceMgr.Init(this, _gamingForm, musicData.difficulty, _gamingForm.GetSafeAreaInfo(), musicData);
         // _danceMgr.OnInitMusicEnv(musicData.audio);
     }
 
@@ -82,7 +82,7 @@ public class GameState : IState
         }
         else if (key.Equals("ReContinueGameTimer"))
         {
-            _danceMgr.ReTry(musicData.audio);
+            _danceMgr.ReTry(musicData);
         }
     }
     public void OnFinishDance(int totalScore)

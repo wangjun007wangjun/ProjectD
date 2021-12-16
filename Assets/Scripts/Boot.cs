@@ -20,6 +20,7 @@ public class Boot : MonoBehaviour
     /// </summary>
     protected void Start()
     {
+        Screen.sleepTimeout = SleepTimeout.NeverSleep;
         //不销毁
         ExtObject.ExtDontDestroyOnLoad(gameObject);
         GLog.LogD("--<color=yellow>Unity Start</color> --");
