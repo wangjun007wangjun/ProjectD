@@ -2,6 +2,7 @@ using UnityEngine;
 using System;
 using Engine.Asset;
 
+//气泡实体，加分执行
 public class DanceGrid
 {
     private string assetPath = "Gaming/DanceItem";

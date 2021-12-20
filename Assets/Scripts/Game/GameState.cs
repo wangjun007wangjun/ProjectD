@@ -12,9 +12,13 @@ using System.Collections;
 
 public class GameState : IState
 {
+    //主界面
     private UIGamingForm _gamingForm;
 
+    //游戏进行管理器
     private DanceMgr _danceMgr;
+
+    //当前的音乐数据配置
     private MusicData musicData;
     public void InitializeState()
     {

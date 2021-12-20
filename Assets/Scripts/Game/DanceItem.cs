@@ -9,25 +9,40 @@ using Engine.Schedule;
 using Engine.Audio;
 
 public class DanceItem : MonoBehaviour, IScheduleHandler
-{    
+{    //初始大小
     private Vector3 originScale = Vector3.one * 3f;
+    //气泡根节点
     public GameObject itemRoot;
+    //点击后特效
     public GameObject clickObj;
+    //缩放节点
     public RectTransform scaleTran;
+    //缩放动画
     public DOTweenAnimation dOTweenAnimation;
+    //点击按钮
     public Button button;
     public Button center;
+    //失败文字
     public GameObject failObj;
+    //Good文字
     public GameObject goodObj;
+    //Cool文字
     public GameObject coolObj;
+    //完没文字
     public GameObject perfaceObj;
+    //当前气泡状态
     private ItemDanceState curDanceState = ItemDanceState.None;
+    //上次气泡状态
     private ItemDanceState lastDanceState = ItemDanceState.None;
+    //是否开始
     private bool isStart = false;
 
+    //点击上后的回调
     public Action OnClickAction;
+    //加分的回调
     public Action<ItemDanceState> OnAddScoreAction;
 
+    //卸载延时timer
     private uint _unLoadTimer;
 
     // Start is called before the first frame update
@@ -44,6 +59,7 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
         {
             return;
         }
+        //根据缩放大小确定当前状态
         if (scaleTran.localScale.x >= 1.7f)
         {
             curDanceState = ItemDanceState.Good;
@@ -68,9 +84,12 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
         {
             curDanceState = ItemDanceState.Fail;
             isStart = false;
+            //根据状态显示
             SetStateShow(false);
         }
     }
+
+    //根据状态对于显示
     private void SetStateShow(bool isClick)
     {
         if (curDanceState != lastDanceState)
@@ -108,6 +127,7 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
     /// </summary>
     void OnEnable()
     {
+        //显示后重置显示
         scaleTran.localScale = originScale;
         curDanceState = ItemDanceState.None;
         lastDanceState = ItemDanceState.None;
@@ -121,6 +141,7 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
     /// </summary>
     void OnDisable()
     {
+        //消失后重置显示
         failObj.SetActive(false);
         goodObj.SetActive(false);
         coolObj.SetActive(false);
@@ -128,6 +149,8 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
         clickObj.SetActive(false);
         itemRoot.SetActive(true);
     }
+
+    //点击到，播放音效，特效，加分，状态显示
     private void OnBtnClick()
     {
         // Handheld.Vibrate();
@@ -142,6 +165,7 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
 
     public void OnScheduleHandle(ScheduleType type, uint id)
     {
+        //卸载资源
         if (id == _unLoadTimer)
         {
             OnClickAction();

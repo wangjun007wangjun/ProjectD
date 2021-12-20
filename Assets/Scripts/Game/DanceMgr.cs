@@ -42,17 +42,20 @@ public enum GameDifficulty
     Normal,
     Hard,
 }
+
+//游戏的主要控制管理器
+//分数控制，难度控制，音乐控制，气泡产生算法
 public class DanceMgr : IScheduleHandler
 {
-    private const string C_danceItemPath = "Gaming/DanceItem";
     private GameState gameState;
+    //主界面窗口
     private UIGamingForm _mainForm;
+    //产生气泡的安全区域
     private GameObject safeArea;
 
-    private string _audioPaht = "";
+    //游戏难度
     private GameDifficulty _gameDiff = GameDifficulty.Easy;
 
-    private List<DanceItem> danceItems;
     private Vector3[] _cors = new Vector3[4];   //安全生产区域(左下、左上、右上、右下 )
     private int _safeWidth = 0;   //安全生产区域宽
     private int _safeHeight = 0;   //安全生产区域高
@@ -67,16 +70,21 @@ public class DanceMgr : IScheduleHandler
     private float[,] numChance;
     //对称出现的概率
     private float[,] typeChance;
+    //多个球产生的间隔时间
     private float[] mulNumBornInterval;
+    //开始时间
     private double startTime = 0;
+    //结束时间
     private double endTime = 0;
 
 
     //总分数
     private int totalScore = 0;
+    //当前局加分配置
     private int[] scoreState;
     //场景相关
     private BaseAsset danceRoot;
+    //背景管理
     private MusicEnvMgr musicEnvMgr;
 
     private uint createItemCorId;
@@ -84,6 +92,8 @@ public class DanceMgr : IScheduleHandler
     //暂停时时间
     private double pauseStartTime;
     private double pauseEndTime;
+
+    //初始化管理器
     public void Init(GameState state, UIGamingForm form, GameDifficulty gameDiff, object param, MusicData musicData)
     {
         gameState = state;
@@ -124,10 +134,13 @@ public class DanceMgr : IScheduleHandler
         danceRoot.RootGo.SetActive(true);
         musicEnvMgr = danceRoot.RootGo.GetComponent<MusicEnvMgr>();
 
+        //音乐时长
         _audioLength = musicData.audio.length;
-        //开始时间
+        //开始时间，结束时间
         startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
         endTime = startTime + _audioLength * 1000;
+
+        //播放背景音乐
         musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
     }
     //再来一次
@@ -154,6 +167,7 @@ public class DanceMgr : IScheduleHandler
     {
         if (id == _chanceTimer)
         {
+            //产生点击气泡
             BornNewItem();
 
             //时间间隔也是随机值
@@ -164,24 +178,27 @@ public class DanceMgr : IScheduleHandler
             double nextDataTime = curDataTime + next + 2;
             // Debug.Log("下次时间："+ next);
 
+            //游戏未结束，正常产生
             if (nextDataTime < endTime)
             {
                 _chanceTimer = this.AddTimer(next, false);
             }
             else
             {
+                //游戏音乐结束，准备结算
                 this.RemoveTimer(_chanceTimer);
                 _showResultTimer = this.AddTimer(1500, false);
             }
         }
         else if (id == _showResultTimer)
         {
-            //结束了
+            //结束了，进行结算
             musicEnvMgr.StopSound();
             gameState.OnFinishDance(totalScore);
         }
     }
 
+    //控制产生气泡，根据配置
     private void BornNewItem()
     {
         float numC = UnityEngine.Random.Range(0f, 1f);
@@ -211,6 +228,8 @@ public class DanceMgr : IScheduleHandler
         List<Vector4> posList = CreatePos(bornNum, typeE);
         createItemCorId = CorService.GetInstance().StartCoroutineSession(CreateDanceGrid(posList));
     }
+
+    //协程创建气泡Item
     private IEnumerator CreateDanceGrid(List<Vector4> posList)
     {
         float[] mulNumBornInterval = new float[2] { 0, 0.3f };
@@ -287,45 +306,6 @@ public class DanceMgr : IScheduleHandler
         return result;
     }
 
-    private IEnumerator CreateDanceGrid(int num)
-    {
-        float[] mulNumBornInterval = new float[2] { 0, 0.3f };
-        int intWeigthMin = Mathf.CeilToInt(_cors[1].x / 150);
-        int intWeigthMax = Mathf.CeilToInt(_cors[3].x / 150);
-        int intHeightMin = Mathf.CeilToInt(_cors[1].y / 150);
-        int intHeightMax = Mathf.CeilToInt(_cors[3].y / 150);
-
-        List<Vector2> existPos = new List<Vector2>();
-        Vector2 pos = new Vector2(-1, -1);
-        for (int i = 0; i < num; i++)
-        {
-            do
-            {
-                int randomX = UnityEngine.Random.Range(intWeigthMin, intWeigthMax) * 150;
-                int randomY = UnityEngine.Random.Range(intHeightMin, intHeightMax) * 150;
-                Debug.Log("随机点：" + randomX + "," + randomY);
-                pos = new Vector2(randomX, randomY);
-
-                DanceGrid grid = new DanceGrid();
-                grid.AddScoreAction = AddScore;
-
-                grid.Born(pos, safeArea.transform);
-
-                existPos.Add(pos);
-            }
-            while (!existPos.Contains(pos));
-            if (num != 1)
-            {
-                yield return new WaitForSeconds(UnityEngine.Random.Range(mulNumBornInterval[0], mulNumBornInterval[1]));
-            }
-            else
-            {
-                yield return null;
-            }
-        }
-        // yield return null;
-    }
-
     //获得对称点
     private List<Vector2> GetSymmetricPos(List<Vector2> originList, BornType bornType)
     {
@@ -354,6 +334,7 @@ public class DanceMgr : IScheduleHandler
         return result;
     }
 
+    //计分，ui显示更新
     public void AddScore(ItemDanceState state)
     {
         // Debug.Log("加分状态："+state.ToString()+ " 分数：" +(scoreState[(int)state]).ToString());
@@ -361,6 +342,7 @@ public class DanceMgr : IScheduleHandler
         _mainForm.UpdateUI("UpdateScore", totalScore);
     }
 
+    //卸载退出管理器
     public void UnInit()
     {
         this.RemoveTimer(_chanceTimer);
@@ -372,14 +354,19 @@ public class DanceMgr : IScheduleHandler
         }
     }
 
+    //游戏暂停，结束时间边长
     private void OnGamePause()
     {
         OnSetMusicEnvPause(true);
     }
+
+    //游戏继续
     private void OnGameContinue()
     {
         OnSetMusicEnvPause(false);
     }
+
+    //暂停时，背景也暂停
     public void OnSetMusicEnvPause(bool pause)
     {
         if (pause)
