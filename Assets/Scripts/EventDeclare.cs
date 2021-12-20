@@ -20,6 +20,8 @@ public enum EventId : uint
     UserLogout = 6,
     //玩家信息改变
     UserInfoChanged = 7,
+    GamePause = 8,
+    GameContinue = 9,
     //
     Count,
 }

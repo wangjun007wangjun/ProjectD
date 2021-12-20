@@ -1,4 +1,9 @@
-﻿using System.Collections;
+﻿/********************************************************************
+  created:  2020-06-05         
+  author:    OneJun           
+  purpose:  游戏中控制背景Mgr,音乐播放，背景效果          
+*********************************************************************/
+using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Engine.Audio;
@@ -38,7 +43,6 @@ public class MusicEnvMgr : MonoBehaviour
     /// </summary>
     void Awake()
     {
-        // audio = GetComponent<AudioSource>();
         for (int i = 0; i < cameraPosPar.childCount; i++)
         {
             cameraPos.Add(cameraPosPar.GetChild(i).transform);
@@ -112,7 +116,6 @@ public class MusicEnvMgr : MonoBehaviour
         {
             newCube[i].transform.localScale = new Vector3(0.5f, Mathf.Lerp(newCube[i].transform.localScale.y, spectrumData[i] * 5000, 0.5f), 0.5f);
             MaterialPropertyBlock block = new MaterialPropertyBlock();
-            // block.SetColor(colorPropertyId, HSVtoRGB(spectrumData[i] * colorMultiplayer, s, v, 1));
 
             block.SetColor(colorPropertyId, new Vector4(Mathf.Lerp(materials[i].material.color.r, spectrumData[i] * 500f, 0.2f), 0.5f, 1f, 1f));
 
@@ -120,11 +123,7 @@ public class MusicEnvMgr : MonoBehaviour
             i++;
         }
     }
-    void MusicSlider()
-    {
-        musicLength = audio.time;
-        musicSlider.value = musicLength / audio.clip.length;
-    }
+
     //
     public void OnSetGameEnablePause(bool isP)
     {
@@ -135,22 +134,14 @@ public class MusicEnvMgr : MonoBehaviour
         audio.clip = clip;
 
         audio.Play();
-        //TODO
         CameraStartMove();
     }
     public void PlaySound(string  clipName)
     {
-        Debug.Log("音乐名字："+clipName);
-        // audio.clip = clip;
+        // Debug.Log("音乐名字："+clipName);
         AudioService.GetInstance().Play(AudioChannelType.MUSIC, clipName, false);
-        // AudioService.GetInstance().SetVolumeByChannel(1, AudioService.GetInstance().GetVolumeByChannel(1));
-        // if(audio == null)
-        // {
-            audio = AudioService.GetInstance().Worker.GetCurMusicSource();
-        // }
+        audio = AudioService.GetInstance().Worker.GetCurMusicSource();
 
-        // audio.Play();
-        //TODO
         CameraStartMove();
     }
 
@@ -171,6 +162,7 @@ public class MusicEnvMgr : MonoBehaviour
             gridOverlay.mainColor = new Vector4(gridColor, 0.5f, 1f, 1f);
         }
     }
+    //网格变化关闭
     IEnumerator GridOff()
     {
         for (int i = 0; i < 51; i++)
@@ -183,6 +175,7 @@ public class MusicEnvMgr : MonoBehaviour
         yield return new WaitForSeconds(Random.Range(1f, 5f));
         yield return StartCoroutine(GridOn());
     }
+    //网格变化开启
     IEnumerator GridOn()
     {
         gridOverlay.showMain = true;
@@ -200,6 +193,7 @@ public class MusicEnvMgr : MonoBehaviour
         }
         
     }
+    //摄像机开始移动
     private IEnumerator CameraMove()
     {
         yield return new WaitForSeconds(Random.Range(2f, 3.5f));

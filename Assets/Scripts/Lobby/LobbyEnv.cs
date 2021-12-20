@@ -1,9 +1,12 @@
-﻿using System.Collections;
+﻿/********************************************************************
+  created:  2020-06-05         
+  author:   大厅背景控制   
+  purpose:  游戏中控制背景Mgr,音乐播放，背景效果          
+*********************************************************************/
+using System.Collections;
 using System.Collections.Generic;
-using DG.Tweening;
 using Engine.Audio;
 using UnityEngine;
-using UnityEngine.UI;
 
 public class LobbyEnv : MonoBehaviour
 {
@@ -21,7 +24,6 @@ public class LobbyEnv : MonoBehaviour
 
     void Awake()
     {
-        // audio = GetComponent<AudioSource>();
     }
 
     /// <summary>
@@ -47,7 +49,7 @@ public class LobbyEnv : MonoBehaviour
             materials.Add(cubeT.transform.GetChild(0).GetComponent<MeshRenderer>());
         }
         StartCoroutine(GridOn());
-        Debug.Log("大厅播放");
+        // Debug.Log("大厅播放");
     }
     /// <summary>
     /// This function is called when the object becomes enabled and active.
@@ -78,7 +80,6 @@ public class LobbyEnv : MonoBehaviour
         {
             newCube[i].transform.localScale = new Vector3(0.5f, Mathf.Lerp(newCube[i].transform.localScale.y, spectrumData[i] * 1000, 0.5f), 0.5f);
             MaterialPropertyBlock block = new MaterialPropertyBlock();
-            // block.SetColor(colorPropertyId, HSVtoRGB(spectrumData[i] * colorMultiplayer, s, v, 1));
 
             block.SetColor(colorPropertyId, new Vector4(Mathf.Lerp(materials[i].material.color.r, spectrumData[i] * 500f, 0.2f), 0.5f, 1f, 0.5f));
 
@@ -88,11 +89,7 @@ public class LobbyEnv : MonoBehaviour
     }
     public void PlaySound()
     {
-        // audio.clip = clip;
-
-        // audio.Play();
         AudioService.GetInstance().Play(AudioChannelType.MUSIC, "Mp3/CloseToYou", true);
-        // AudioService.GetInstance().SetVolumeByChannel(1, AudioService.GetInstance().GetVolumeByChannel(1));
     }
 
     void DynamicColor()

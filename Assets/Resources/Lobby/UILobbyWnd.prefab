@@ -1598,7 +1598,7 @@ GameObject:
   - component: {fileID: 1311668795952011659}
   - component: {fileID: 1713219852510437030}
   - component: {fileID: 8568247268656200553}
-  - component: {fileID: 2931944388268825981}
+  - component: {fileID: 6410874446780178732}
   m_Layer: 5
   m_Name: SettingBg
   m_TagString: Untagged
@@ -1667,7 +1667,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &2931944388268825981
+--- !u!114 &6410874446780178732
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -1706,7 +1706,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 8568247268656200553}
   m_OnClick:
     m_PersistentCalls:

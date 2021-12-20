@@ -299,7 +299,7 @@ RectTransform:
   m_Children:
   - {fileID: 1823997331956214202}
   m_Father: {fileID: 5041231928793273484}
-  m_RootOrder: 7
+  m_RootOrder: 6
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -1885,10 +1885,10 @@ RectTransform:
   - {fileID: 6175905875076151592}
   - {fileID: 7337978624353287228}
   - {fileID: 8022325972239413527}
-  - {fileID: 1549406553974815777}
   - {fileID: 7948700155936685916}
   - {fileID: 1764188833291139345}
   - {fileID: 2001952077350828004}
+  - {fileID: 1549406553974815777}
   m_Father: {fileID: 8076629741979445857}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -2004,7 +2004,7 @@ RectTransform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 5041231928793273484}
-  m_RootOrder: 4
+  m_RootOrder: 7
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
@@ -2193,7 +2193,7 @@ RectTransform:
   m_Children:
   - {fileID: 6776340800108729702}
   m_Father: {fileID: 5041231928793273484}
-  m_RootOrder: 6
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
@@ -2447,7 +2447,7 @@ GameObject:
   - component: {fileID: 6776340800108729702}
   - component: {fileID: 6862121559977596500}
   - component: {fileID: 3005219044955509305}
-  - component: {fileID: 597710380835469319}
+  - component: {fileID: 2197789615977622491}
   m_Layer: 5
   m_Name: SettingBg
   m_TagString: Untagged
@@ -2516,7 +2516,7 @@ MonoBehaviour:
   m_FillOrigin: 0
   m_UseSpriteMesh: 0
   m_PixelsPerUnitMultiplier: 1
---- !u!114 &597710380835469319
+--- !u!114 &2197789615977622491
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -2555,7 +2555,7 @@ MonoBehaviour:
     m_PressedTrigger: Pressed
     m_SelectedTrigger: Selected
     m_DisabledTrigger: Disabled
-  m_Interactable: 1
+  m_Interactable: 0
   m_TargetGraphic: {fileID: 3005219044955509305}
   m_OnClick:
     m_PersistentCalls:
@@ -2946,12 +2946,12 @@ RectTransform:
   - {fileID: 1203581988481716527}
   - {fileID: 9211054013680641983}
   m_Father: {fileID: 5041231928793273484}
-  m_RootOrder: 5
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: 0, y: -29.50299}
-  m_SizeDelta: {x: -290, y: -323.006}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 0, y: -62.916504}
+  m_SizeDelta: {x: 1523.863, y: 690.1669}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!1 &8282156187301210123
 GameObject:

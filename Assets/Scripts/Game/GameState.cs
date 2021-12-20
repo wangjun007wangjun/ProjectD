@@ -6,7 +6,7 @@
 using Engine.State;
 using Engine.UGUI;
 using Engine.Schedule;
-using UnityEngine;
+using DG.Tweening;
 using Net;
 using System.Collections;
 
@@ -36,7 +36,6 @@ public class GameState : IState
         _gamingForm = UIFormHelper.CreateFormClass<UIGamingForm>(OnGamingAction, null, false);
 
         _danceMgr.Init(this, _gamingForm, musicData.difficulty, _gamingForm.GetSafeAreaInfo(), musicData);
-        // _danceMgr.OnInitMusicEnv(musicData.audio);
     }
 
 
@@ -48,7 +47,7 @@ public class GameState : IState
             _gamingForm = null;
         }
         _danceMgr.UnInit();
-        // DoToween.KillAll();
+        DOTween.KillAll();
     }
 
     public void OnStateChanged(string srcSt, string curSt, object usrData)
@@ -78,18 +77,26 @@ public class GameState : IState
         }
         else if (key.Equals("StartGaming"))
         {
-            GLog.LogD("倒计时结束，可以开始游戏了");
+            // GLog.LogD("倒计时结束，可以开始游戏了");
             _danceMgr.BeginDanceGame();
         }
         else if (key.Equals("ReContinueGameTimer"))
         {
             _danceMgr.ReTry(musicData);
         }
-        else if(key.Equals("GamePause"))
+        else if (key.Equals("GamePause"))
         {
-            bool isPause = (bool) param;
+            bool isPause = (bool)param;
             _danceMgr.OnSetMusicEnvPause(isPause);
         }
+    }
+    public void OnGamePause()
+    {
+        _danceMgr.OnSetMusicEnvPause(true);
+    }
+    public void OnGameContinue()
+    {
+        _danceMgr.OnSetMusicEnvPause(false);
     }
     public void OnFinishDance(int totalScore)
     {

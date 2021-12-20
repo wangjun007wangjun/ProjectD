@@ -56,7 +56,13 @@ namespace Engine.State
         private ObjDictionary<string, IState> _registedState = new ObjDictionary<string, IState>();
         //当前状态
         private IState _curState = null;
-
+        public IState CurState
+        {
+            get
+            {
+                return _curState;
+            }
+        }
         private readonly List<IStateCallback> _callback = new List<IStateCallback>();
 
         /// <summary>

@@ -11,7 +11,6 @@ using UnityEngine;
 using SuperScrollView;
 using Engine.PLink;
 using Engine.Schedule;
-using System.Collections;
 using Engine.Audio;
 
 namespace Lobby
@@ -50,7 +49,7 @@ namespace Lobby
 
             _uiAudioBtnButton.onClick.AddListener(() =>
             {
-                Debug.Log("点击音量");
+                // Debug.Log("点击音量");
                 _uiAudioSettingBtnButton.gameObject.SetActive(true);
                 _uiMusicSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(1) / 1.0f;
                 _uiSoundSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(2) / 1.0f;
@@ -86,7 +85,6 @@ namespace Lobby
 
             _uiScrollViewLoopListView2.InitListView(-1, OnRefreshListItem);
             _uiScrollViewLoopListView2.MovePanelToItemIndex(0, 0);
-            // _uiScrollViewLoopListView2.InitListView(_uiBgMusicDataCfgList.list.Count, OnRefreshListItem);
         }
 
         protected override void OnUninitialize()

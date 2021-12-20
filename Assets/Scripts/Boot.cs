@@ -126,12 +126,22 @@ public class Boot : MonoBehaviour
             {
                 AudioService.GetInstance().CloseAll();
             }
+            GameState state = StateService.GetInstance().CurState as GameState;
+            if (state != null)
+            {
+                state.OnGamePause();
+            }
         }
         else
         {
             if (AudioService.IsValidate())
             {
                 AudioService.GetInstance().OpenAll();
+            }
+            GameState state = StateService.GetInstance().CurState as GameState;
+            if (state != null)
+            {
+                state.OnGameContinue();
             }
         }
     }

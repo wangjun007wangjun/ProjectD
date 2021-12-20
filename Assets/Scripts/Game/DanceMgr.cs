@@ -1,7 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using DG.Tweening;
 using Engine.Schedule;
 using Engine.Asset;
 using Engine.Base;
@@ -81,6 +80,10 @@ public class DanceMgr : IScheduleHandler
     private MusicEnvMgr musicEnvMgr;
 
     private uint createItemCorId;
+
+    //暂停时时间
+    private double pauseStartTime;
+    private double pauseEndTime;
     public void Init(GameState state, UIGamingForm form, GameDifficulty gameDiff, object param, MusicData musicData)
     {
         gameState = state;
@@ -125,7 +128,6 @@ public class DanceMgr : IScheduleHandler
         //开始时间
         startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
         endTime = startTime + _audioLength * 1000;
-        // musicEnvMgr.PlaySound(string.Format("Mp3/%s/%s",musicData.difficulty.ToString(), musicData.audio.name));
         musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
     }
     //再来一次
@@ -136,20 +138,12 @@ public class DanceMgr : IScheduleHandler
          //开始时间
         startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
         endTime = startTime + _audioLength * 1000;
-        // musicEnvMgr.PlaySound(clip);
-        // musicEnvMgr.PlaySound(string.Format("Mp3/%s/%s",musicData.difficulty.ToString(), musicData.audio.name));
         musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
     }
     public void BeginDanceGame()
     {
-        //产生多少个
-        // int clickCnt = 60;
-        // float minInterval = 0.5f;
-
         //时间间隔也是随机值
         int[] intervalArr = new int[2] { 500, 3000 };
-        //得出哪些时间点产生点击
-        // Random.Range(1, 34);
 
         int next = UnityEngine.Random.Range(intervalArr[0], intervalArr[1]);
         // Debug.Log("下次时间："+ next);
@@ -167,7 +161,7 @@ public class DanceMgr : IScheduleHandler
             int next = UnityEngine.Random.Range(intervalArr[0], intervalArr[1]);
 
             double curDataTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
-            double nextDataTime = curDataTime + next + 1;
+            double nextDataTime = curDataTime + next + 2;
             // Debug.Log("下次时间："+ next);
 
             if (nextDataTime < endTime)
@@ -182,7 +176,7 @@ public class DanceMgr : IScheduleHandler
         }
         else if (id == _showResultTimer)
         {
-            //TODO结束了
+            //结束了
             musicEnvMgr.StopSound();
             gameState.OnFinishDance(totalScore);
         }
@@ -211,14 +205,6 @@ public class DanceMgr : IScheduleHandler
                 break;
             }
         }
-        //位置
-        //将安全区宽，高处100，作为随机index
-        // int intWeigthMin = Mathf.CeilToInt(_cors[1].x / 150);
-        // int intWeigthMax = Mathf.CeilToInt(_cors[3].x / 150);
-        // int intHeightMin = Mathf.CeilToInt(_cors[1].y / 150);
-        // int intHeightMax = Mathf.CeilToInt(_cors[3].y / 150);
-        // Debug.Log("宽高随机范围：" + intWeigthMin + "," +intWeigthMax + "," + intHeightMin + "," +intWeigthMax);
-
         //如果小于等于2个，位置完全随机，否则3个及以上，位置需要为连续线段
         //2个及以上时，产生时间需要有间隔
         int bornNum = (int)(numE + 1);
@@ -349,31 +335,21 @@ public class DanceMgr : IScheduleHandler
             if (bornType == BornType.Hor)
             {
                 Vector2 pos = new Vector2(originList[i].x * -1, originList[i].y);
-                // if (!originList.Contains(pos))
-                // {
                 result.Add(pos);
-                // }
             }
             else if (bornType == BornType.Ver)
             {
                 Vector2 pos = new Vector2(originList[i].x, originList[i].y * -1);
 
-                // if (!originList.Contains(pos))
-                // {
                 result.Add(pos);
-                // }
             }
             else if (bornType == BornType.Fork)
             {
                 Vector2 pos = new Vector2(originList[i].x * -1, originList[i].y * -1);
 
-                // if (!originList.Contains(pos))
-                // {
                 result.Add(pos);
-                // }
             }
         }
-        // result.AddRange(originList);
         // Debug.Log("对称个数："+result.Count);
         return result;
     }
@@ -396,8 +372,28 @@ public class DanceMgr : IScheduleHandler
         }
     }
 
+    private void OnGamePause()
+    {
+        OnSetMusicEnvPause(true);
+    }
+    private void OnGameContinue()
+    {
+        OnSetMusicEnvPause(false);
+    }
     public void OnSetMusicEnvPause(bool pause)
     {
+        if (pause)
+        {
+            pauseStartTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
+        }
+        else
+        {
+            pauseEndTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
+            endTime += (pauseEndTime - pauseStartTime);
+
+            pauseEndTime = 0;
+            pauseStartTime = 0;
+        }
         musicEnvMgr.OnSetGameEnablePause(pause);
     }
 }

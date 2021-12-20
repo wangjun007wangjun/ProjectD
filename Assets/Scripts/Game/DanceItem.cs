@@ -6,6 +6,7 @@ using UnityEngine.UI;
 using System;
 using Engine.Asset;
 using Engine.Schedule;
+using Engine.Audio;
 
 public class DanceItem : MonoBehaviour, IScheduleHandler
 {    
@@ -15,6 +16,7 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
     public RectTransform scaleTran;
     public DOTweenAnimation dOTweenAnimation;
     public Button button;
+    public Button center;
     public GameObject failObj;
     public GameObject goodObj;
     public GameObject coolObj;
@@ -32,6 +34,7 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
     void Start()
     {
         button.onClick.AddListener(OnBtnClick);
+        center.onClick.AddListener(OnBtnClick);
     }
 
     // Update is called once per frame
@@ -41,17 +44,25 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
         {
             return;
         }
-        if (scaleTran.localScale.x >= 1.5f)
+        if (scaleTran.localScale.x >= 1.7f)
         {
             curDanceState = ItemDanceState.Good;
         }
-        else if (scaleTran.localScale.x < 1.5f && scaleTran.localScale.x >= 1.2f)
+        else if (scaleTran.localScale.x < 1.7f && scaleTran.localScale.x >= 1.3f)
         {
             curDanceState = ItemDanceState.Cool;
         }
-        else if (scaleTran.localScale.x < 1.2f && scaleTran.localScale.x >= 0.9f)
+        else if (scaleTran.localScale.x < 1.3f && scaleTran.localScale.x >= 0.85f)
         {
             curDanceState = ItemDanceState.Perfect;
+        }
+        else if (scaleTran.localScale.x < 0.85f && scaleTran.localScale.x >= 0.5f)
+        {
+            curDanceState = ItemDanceState.Cool;
+        }
+        else if (scaleTran.localScale.x < 0.5f && scaleTran.localScale.x >= 0.31f)
+        {
+            curDanceState = ItemDanceState.Good;
         }
         else
         {
@@ -81,14 +92,14 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
                 perfaceObj.SetActive(true);
             }
             lastDanceState = curDanceState;
-            //等待后回收自己TODO
+            //等待后回收自己
             if (isClick)
             {
                 _unLoadTimer = this.AddTimer(600, false);
             }
             else
             {
-                _unLoadTimer = this.AddTimer(100, false);
+                _unLoadTimer = this.AddTimer(150, false);
             }
         }
     }
@@ -119,6 +130,9 @@ public class DanceItem : MonoBehaviour, IScheduleHandler
     }
     private void OnBtnClick()
     {
+        // Handheld.Vibrate();
+        AudioService.GetInstance().Play(AudioChannelType.UI, "Audio/itemWillClear", false);
+
         clickObj.SetActive(true);
         itemRoot.SetActive(false);
         isStart = false;
