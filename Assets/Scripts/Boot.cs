@@ -75,13 +75,15 @@ public class Boot : MonoBehaviour
         IState login = new LoginState();
         IState lobby = new LobbyState();
         IState gaming = new GameState();
+        IState menu = new MenuState();
 
         StateService.Instance.RegisteState(launch);
         StateService.Instance.RegisteState(login);
         StateService.Instance.RegisteState(lobby);
         StateService.Instance.RegisteState(gaming);
+        StateService.Instance.RegisteState(menu);
         //
-        StateService.Instance.ChangeState(GConst.StateKey.Launch);
+        StateService.Instance.ChangeState(GConst.StateKey.Menu);
     }
 
 

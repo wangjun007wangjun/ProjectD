@@ -42,7 +42,7 @@ namespace Lobby
         {
             _uiAudioBtnButton = GetComponent(_uiAudioBtnButtonIndex) as Button;
             _uiScrollViewLoopListView2 = GetComponent(_uiScrollViewLoopListView2Index) as LoopListView2;
-            _uiBgMusicDataCfgList = GetComponent(_uiBgMusicDataCfgListIndex) as MusicDataCfgList;
+            _uiBgMusicDataCfgList = DataService.GetInstance().MusicDataCfgList;
             _uiMusicSliderSlider = GetComponent(_uiMusicSliderSliderIndex) as Slider;
             _uiSoundSliderSlider = GetComponent(_uiSoundSliderSliderIndex) as Slider;
             _uiAudioSettingBtnButton = GetComponent(_uiAudioSettingBtnButtonIndex) as Button;
@@ -131,6 +131,7 @@ namespace Lobby
             PrefabLink prefabLink = item.GetComponent<PrefabLink>();
 
             (prefabLink.GetCacheComponent(1) as Image).sprite = itemData.musicTexture;
+            Debug.Log("id:" + itemData.id.ToString());
             (prefabLink.GetCacheComponent(2) as Text).text = "Best Score:" + DataService.GetInstance().Score.GetScoreInfoById(itemData.id).ToString();
             (prefabLink.GetCacheComponent(7) as Text).text = itemData.name;
             Button button = (prefabLink.GetCacheComponent(3) as Button);
@@ -160,9 +161,7 @@ namespace Lobby
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
             {
-                MusicData data = _uiBgMusicDataCfgList.list[indexTemp];
-
-                SendAction("EnterGaming", data);
+                SendAction("EnterGaming", index);
             });
             return item;
         }

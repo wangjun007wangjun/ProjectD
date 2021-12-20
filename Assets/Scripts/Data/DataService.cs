@@ -15,6 +15,8 @@ namespace Data
         //用户信息自己
         public UserInfo Me;
         public ScoreData Score;
+        public MusicDataCfgList MusicDataCfgList;
+
         public override bool Initialize()
         {
             Me = new UserInfo();

@@ -6,6 +6,8 @@
 using Engine.State;
 using Engine.UGUI;
 using Engine.Asset;
+using Data;
+
 namespace Lobby
 {
     public class LobbyState : IState
@@ -43,8 +45,9 @@ namespace Lobby
         {
             if (key.Equals("EnterGaming"))
             {
-                MusicData data = param as MusicData;
+                int dataIndex = (int)param;
                 // Debug.Log("回调EnterGaming");
+                MusicData data = DataService.GetInstance().MusicDataCfgList.list[dataIndex];
                 StateService.Instance.ChangeState(GConst.StateKey.Game, data);
             }
         }

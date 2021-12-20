@@ -130,6 +130,7 @@ public static class GConst
         public static readonly string Login = "StateLogin";
         public static readonly string Lobby = "StateLobby";
         public static readonly string Game = "StateGame";
+        public static readonly string Menu = "StateMenu";
     }
 }
 

@@ -4,6 +4,7 @@
     purpose:	得分信息								
 *********************************************************************/
 using System.Collections.Generic;
+using UnityEngine;
 
 namespace Data
 {
@@ -39,6 +40,10 @@ namespace Data
 
         public int GetScoreInfoById(int id)
         {
+            if (_storage == null)
+{
+    Debug.Log("为空");
+}
             if (_storage.ScoreInfoList != null)
             {
                 ScoreInfo info = _storage.ScoreInfoList.Find((a) => { return a.musicId == id; });
