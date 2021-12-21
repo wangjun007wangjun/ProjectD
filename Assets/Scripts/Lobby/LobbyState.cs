@@ -14,6 +14,7 @@ namespace Lobby
     {
         private UILobbyForm _lobbyForm;
         private BaseAsset _lobbyAsset;
+        private int model = 1;
         public void InitializeState()
         {
         }
@@ -25,14 +26,19 @@ namespace Lobby
 
         public void OnStateEnter(object usrData = null)
         {
-            if (_lobbyAsset == null)
+            model = DataService.GetInstance().Model;
+            if (model == 2)
             {
-                _lobbyAsset = AssetService.GetInstance().LoadInstantiateAsset("Lobby/LobbyEnv", LifeType.Manual);
-                _lobbyAsset.RootGo.SetActive(true);
+                if (_lobbyAsset == null)
+                {
+                    _lobbyAsset = AssetService.GetInstance().LoadInstantiateAsset("Lobby/LobbyEnv", LifeType.Manual);
+                    _lobbyAsset.RootGo.SetActive(true);
+                }
             }
+
             if (_lobbyForm == null)
             {
-                _lobbyForm = UIFormHelper.CreateFormClass<UILobbyForm>(OnLobbyFormAction, null, true);
+                _lobbyForm = UIFormHelper.CreateFormClass<UILobbyForm>(OnLobbyFormAction, model, true);
             }
             else
             {
@@ -68,7 +74,6 @@ namespace Lobby
 
 
         }
-
 
         public void UninitializeState()
         {

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3298170338973177425}
   - component: {fileID: 9139629071883637039}
+  - component: {fileID: 663519026295842251}
   m_Layer: 5
   m_Name: MusicCfg
   m_TagString: Untagged
@@ -79,3 +80,11 @@ MonoBehaviour:
     audio: {fileID: 8300000, guid: 445f4ad0b548c494981040bf9c6a7caf, type: 3}
     difficulty: 2
     name: Chasing Colors
+--- !u!81 &663519026295842251
+AudioListener:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8068295429385108483}
+  m_Enabled: 1

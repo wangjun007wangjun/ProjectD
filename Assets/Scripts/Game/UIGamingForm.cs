@@ -35,6 +35,7 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
     private const int _uiPlayBtnButtonIndex = 16;
     private const int _uiPausePanelRectTransformIndex = 17;
     private const int _uiContinueBigBtnButtonIndex = 18;
+    private const int _uiVideoPlayerPlayVideoIndex = 19;
 
     private Button _uiExitBtnButton;
     private TextMeshProUGUI _uiCountDownTxtTMPText;
@@ -55,7 +56,7 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
     private Button _uiPlayBtnButton;
     private RectTransform _uiPausePanelRectTransform;
     private Button _uiContinueBigBtnButton;
-
+    private PlayVideo _uiVideoPlayerPlayVideo;
 
 
 
@@ -86,6 +87,7 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
         _uiPlayBtnButton = GetComponent(_uiPlayBtnButtonIndex) as Button;
         _uiPausePanelRectTransform = GetComponent(_uiPausePanelRectTransformIndex) as RectTransform;
         _uiContinueBigBtnButton = GetComponent(_uiContinueBigBtnButtonIndex) as Button;
+        _uiVideoPlayerPlayVideo = GetComponent(_uiVideoPlayerPlayVideoIndex) as PlayVideo;
 
         _uiExitBtnButton.onClick.AddListener(() =>
         {
@@ -129,7 +131,8 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
             _uiPauseBtnButton.gameObject.SetActive(false);
             _uiPausePanelRectTransform.gameObject.SetActive(true);
 
-            AudioService.GetInstance().StopChannel(1);
+            AudioService.GetInstance().StopChannel(1);                
+            
             SendAction("GamePause", true);
         });
         _uiPlayBtnButton.onClick.AddListener(() =>
@@ -138,6 +141,7 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
             _uiPlayBtnButton.gameObject.SetActive(false);
             _uiPausePanelRectTransform.gameObject.SetActive(false);
             _uiPauseBtnButton.gameObject.SetActive(true);
+            
             AudioService.GetInstance().ContinueChannel(1);
 
             SendAction("GamePause", false);
@@ -148,8 +152,9 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
             _uiPlayBtnButton.gameObject.SetActive(false);
             _uiPausePanelRectTransform.gameObject.SetActive(false);
             _uiPauseBtnButton.gameObject.SetActive(true);
+            
             AudioService.GetInstance().ContinueChannel(1);
-
+            
             SendAction("GamePause", false);
         });
 
@@ -175,6 +180,7 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
         _uiPlayBtnButton = null;
         _uiPausePanelRectTransform = null;
         _uiContinueBigBtnButton = null;
+        _uiVideoPlayerPlayVideo = null;
 
     }
     protected override void OnInitialize(object param)
@@ -183,6 +189,8 @@ public class UIGamingForm : UIFormClass, IScheduleHandler
 
         _timer = this.AddTimer(1000, true);
         _uiScoreText.text = "0";
+
+        _uiVideoPlayerPlayVideo.gameObject.SetActive(DataService.GetInstance().Model == 1);
     }
 
     protected override void OnUninitialize()

@@ -12,6 +12,7 @@ using SuperScrollView;
 using Engine.PLink;
 using Engine.Schedule;
 using Engine.Audio;
+using Engine.State;
 
 namespace Lobby
 {
@@ -23,6 +24,8 @@ namespace Lobby
         private const int _uiMusicSliderSliderIndex = 3;
         private const int _uiSoundSliderSliderIndex = 4;
         private const int _uiAudioSettingBtnButtonIndex = 5;
+        private const int _uiBackBtnButtonIndex = 6;
+        private const int _uiBgRectTransformIndex = 7;
 
         private Button _uiAudioBtnButton;
         private LoopListView2 _uiScrollViewLoopListView2;
@@ -30,6 +33,9 @@ namespace Lobby
         private Slider _uiMusicSliderSlider;
         private Slider _uiSoundSliderSlider;
         private Button _uiAudioSettingBtnButton;
+        private Button _uiBackBtnButton;
+        private RectTransform _uiBgRectTransform;
+
 
         private uint _timerFrame2;
 
@@ -46,6 +52,8 @@ namespace Lobby
             _uiMusicSliderSlider = GetComponent(_uiMusicSliderSliderIndex) as Slider;
             _uiSoundSliderSlider = GetComponent(_uiSoundSliderSliderIndex) as Slider;
             _uiAudioSettingBtnButton = GetComponent(_uiAudioSettingBtnButtonIndex) as Button;
+            _uiBackBtnButton = GetComponent(_uiBackBtnButtonIndex) as Button;
+            _uiBgRectTransform = GetComponent(_uiBgRectTransformIndex) as RectTransform;
 
             _uiAudioBtnButton.onClick.AddListener(() =>
             {
@@ -53,6 +61,10 @@ namespace Lobby
                 _uiAudioSettingBtnButton.gameObject.SetActive(true);
                 _uiMusicSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(1) / 1.0f;
                 _uiSoundSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(2) / 1.0f;
+            });
+            _uiBackBtnButton.onClick.AddListener(() =>
+            {
+                StateService.Instance.ChangeState(GConst.StateKey.Menu);
             });
             _uiAudioSettingBtnButton.onClick.AddListener(() =>
             {
@@ -75,10 +87,14 @@ namespace Lobby
             _uiMusicSliderSlider = null;
             _uiSoundSliderSlider = null;
             _uiAudioSettingBtnButton = null;
+            _uiBackBtnButton = null;
+            _uiBgRectTransform = null;
 
         }
         protected override void OnInitialize(object param)
         {
+            int model = (int)param;
+            _uiBgRectTransform.gameObject.SetActive(model == 1);
             SendAction("SendMusicCfgDataList", _uiBgMusicDataCfgList);
 
             _timerFrame2 = this.AddFrame(1, true);
@@ -108,6 +124,8 @@ namespace Lobby
         {
             if (id.Equals("RefreshAll"))
             {
+                _uiBgRectTransform.gameObject.SetActive(DataService.GetInstance().Model == 1);
+
                 _uiScrollViewLoopListView2.RefreshAllShownItem();
             }
         }
@@ -131,7 +149,6 @@ namespace Lobby
             PrefabLink prefabLink = item.GetComponent<PrefabLink>();
 
             (prefabLink.GetCacheComponent(1) as Image).sprite = itemData.musicTexture;
-            Debug.Log("id:" + itemData.id.ToString());
             (prefabLink.GetCacheComponent(2) as Text).text = "Best Score:" + DataService.GetInstance().Score.GetScoreInfoById(itemData.id).ToString();
             (prefabLink.GetCacheComponent(7) as Text).text = itemData.name;
             Button button = (prefabLink.GetCacheComponent(3) as Button);
@@ -161,7 +178,7 @@ namespace Lobby
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
             {
-                SendAction("EnterGaming", index);
+                SendAction("EnterGaming", indexTemp);
             });
             return item;
         }

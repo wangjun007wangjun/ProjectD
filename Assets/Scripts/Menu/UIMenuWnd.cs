@@ -15,27 +15,30 @@ using Engine.Audio;
 
 public class UIMenuWnd : UIFormClass
 {
-   private const int _uiAudioBtnButtonIndex = 0;
-private const int _uiMoShiBtn1ButtonIndex = 1;
-private const int _uiMoShiBtn2RectTransformIndex = 2;
-private const int _uiMusicSliderSliderIndex = 3;
-private const int _uiSoundSliderSliderIndex = 4;
-private const int _uiAudioSettingBtnButtonIndex = 5;
-private const int _uiIntroduceBtnButtonIndex = 6;
-private const int _uiSettingBtnButtonIndex = 7;
-private const int _uiIntroductionPanelRectTransformIndex = 8;
-private const int _uiCloseIntroductionBtnButtonIndex = 9;
+    private const int _uiAudioBtnButtonIndex = 0;
+    private const int _uiMoShiBtn1ButtonIndex = 1;
+    private const int _uiMoShiBtn2ButtonIndex = 2;
+    private const int _uiMusicSliderSliderIndex = 3;
+    private const int _uiSoundSliderSliderIndex = 4;
+    private const int _uiAudioSettingBtnButtonIndex = 5;
+    private const int _uiIntroduceBtnButtonIndex = 6;
+    private const int _uiSettingBtnButtonIndex = 7;
+    private const int _uiIntroductionPanelRectTransformIndex = 8;
+    private const int _uiCloseIntroductionBtnButtonIndex = 9;
+    private const int _uiQuitBtnButtonIndex = 10;
 
-private Button _uiAudioBtnButton;
-private Button _uiMoShiBtn1Button;
-private Button _uiMoShiBtn2Button;
-private Slider _uiMusicSliderSlider;
-private Slider _uiSoundSliderSlider;
-private Button _uiAudioSettingBtnButton;
-private Button _uiIntroduceBtnButton;
-private Button _uiSettingBtnButton;
-private RectTransform _uiIntroductionPanelRectTransform;
-private Button _uiCloseIntroductionBtnButton;
+    private Button _uiAudioBtnButton;
+    private Button _uiMoShiBtn1Button;
+    private Button _uiMoShiBtn2Button;
+    private Slider _uiMusicSliderSlider;
+    private Slider _uiSoundSliderSlider;
+    private Button _uiAudioSettingBtnButton;
+    private Button _uiIntroduceBtnButton;
+    private Button _uiSettingBtnButton;
+    private RectTransform _uiIntroductionPanelRectTransform;
+    private Button _uiCloseIntroductionBtnButton;
+    private Button _uiQuitBtnButton;
+
 
     public override string GetPath()
     {
@@ -43,16 +46,17 @@ private Button _uiCloseIntroductionBtnButton;
     }
     protected override void OnResourceLoaded()
     {
-       _uiAudioBtnButton = GetComponent(_uiAudioBtnButtonIndex)as Button;
-_uiMoShiBtn1Button = GetComponent(_uiMoShiBtn1ButtonIndex)as Button;
-_uiMoShiBtn2Button = GetComponent(_uiMoShiBtn2RectTransformIndex)as Button;
-_uiMusicSliderSlider = GetComponent(_uiMusicSliderSliderIndex)as Slider;
-_uiSoundSliderSlider = GetComponent(_uiSoundSliderSliderIndex)as Slider;
-_uiAudioSettingBtnButton = GetComponent(_uiAudioSettingBtnButtonIndex)as Button;
-_uiIntroduceBtnButton = GetComponent(_uiIntroduceBtnButtonIndex)as Button;
-_uiSettingBtnButton = GetComponent(_uiSettingBtnButtonIndex)as Button;
-_uiIntroductionPanelRectTransform = GetComponent(_uiIntroductionPanelRectTransformIndex)as RectTransform;
-_uiCloseIntroductionBtnButton = GetComponent(_uiCloseIntroductionBtnButtonIndex)as Button;
+        _uiAudioBtnButton = GetComponent(_uiAudioBtnButtonIndex) as Button;
+        _uiMoShiBtn1Button = GetComponent(_uiMoShiBtn1ButtonIndex) as Button;
+        _uiMoShiBtn2Button = GetComponent(_uiMoShiBtn2ButtonIndex) as Button;
+        _uiMusicSliderSlider = GetComponent(_uiMusicSliderSliderIndex) as Slider;
+        _uiSoundSliderSlider = GetComponent(_uiSoundSliderSliderIndex) as Slider;
+        _uiAudioSettingBtnButton = GetComponent(_uiAudioSettingBtnButtonIndex) as Button;
+        _uiIntroduceBtnButton = GetComponent(_uiIntroduceBtnButtonIndex) as Button;
+        _uiSettingBtnButton = GetComponent(_uiSettingBtnButtonIndex) as Button;
+        _uiIntroductionPanelRectTransform = GetComponent(_uiIntroductionPanelRectTransformIndex) as RectTransform;
+        _uiCloseIntroductionBtnButton = GetComponent(_uiCloseIntroductionBtnButtonIndex) as Button;
+        _uiQuitBtnButton = GetComponent(_uiQuitBtnButtonIndex) as Button;
 
         _uiAudioSettingBtnButton.onClick.AddListener(() =>
         {
@@ -74,33 +78,38 @@ _uiCloseIntroductionBtnButton = GetComponent(_uiCloseIntroductionBtnButtonIndex)
         {
             SendAction("OnClickMoShi2");
         });
-         _uiIntroduceBtnButton.onClick.AddListener(()=>
-        {
-            _uiIntroductionPanelRectTransform.gameObject.SetActive(true);
-        });
-         _uiSettingBtnButton.onClick.AddListener(()=>
-        {
-            _uiAudioSettingBtnButton.gameObject.SetActive(true);
-                _uiMusicSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(1) / 1.0f;
-                _uiSoundSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(2) / 1.0f;
-        });
-        _uiCloseIntroductionBtnButton.onClick.AddListener(()=>
+        _uiIntroduceBtnButton.onClick.AddListener(() =>
+       {
+           _uiIntroductionPanelRectTransform.gameObject.SetActive(true);
+       });
+        _uiSettingBtnButton.onClick.AddListener(() =>
+       {
+           _uiAudioSettingBtnButton.gameObject.SetActive(true);
+           _uiMusicSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(1) / 1.0f;
+           _uiSoundSliderSlider.value = AudioService.GetInstance().GetVolumeByChannel(2) / 1.0f;
+       });
+        _uiCloseIntroductionBtnButton.onClick.AddListener(() =>
         {
             _uiIntroductionPanelRectTransform.gameObject.SetActive(false);
+        });
+        _uiQuitBtnButton.onClick.AddListener(() =>
+        {
+            Application.Quit();
         });
     }
     protected override void OnResourceUnLoaded()
     {
-       _uiAudioBtnButton = null;
-_uiMoShiBtn1Button = null;
-_uiMoShiBtn2Button = null;
-_uiMusicSliderSlider = null;
-_uiSoundSliderSlider = null;
-_uiAudioSettingBtnButton = null;
-_uiIntroduceBtnButton = null;
-_uiSettingBtnButton = null;
-_uiIntroductionPanelRectTransform = null;
-_uiCloseIntroductionBtnButton = null;
+        _uiAudioBtnButton = null;
+        _uiMoShiBtn1Button = null;
+        _uiMoShiBtn2Button = null;
+        _uiMusicSliderSlider = null;
+        _uiSoundSliderSlider = null;
+        _uiAudioSettingBtnButton = null;
+        _uiIntroduceBtnButton = null;
+        _uiSettingBtnButton = null;
+        _uiIntroductionPanelRectTransform = null;
+        _uiCloseIntroductionBtnButton = null;
+        _uiQuitBtnButton = null;
 
     }
     protected override void OnInitialize(object param)

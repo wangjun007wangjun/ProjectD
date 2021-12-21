@@ -15,12 +15,14 @@ namespace Data
         //用户信息自己
         public UserInfo Me;
         public ScoreData Score;
-        public MusicDataCfgList MusicDataCfgList;
-
+        public MusicDataCfgList MusicDataCfgList = null;
+        //游戏模式
+        public int Model = 1;
         public override bool Initialize()
         {
             Me = new UserInfo();
             Score = new ScoreData();
+            Model = 1;
             return true;
         }
 
@@ -28,12 +30,14 @@ namespace Data
         {
             Me = null;
             Score = null;
+            Model = 1;
         }
 
         public void ResetData()
         {
             Me = new UserInfo();
             Score = new ScoreData();
+            Model = 1;
         }
 
         public void DelLocalSaveData()

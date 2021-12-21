@@ -6,6 +6,8 @@ using Engine.Asset;
 using Engine.Base;
 using Engine.Cor;
 using System;
+using Data;
+using Engine.Audio;
 
 ///状态
 public enum ItemDanceState
@@ -85,13 +87,14 @@ public class DanceMgr : IScheduleHandler
     //场景相关
     private BaseAsset danceRoot;
     //背景管理
-    private MusicEnvMgr musicEnvMgr;
+    private MusicEnvMgr musicEnvMgr = null;
 
     private uint createItemCorId;
 
     //暂停时时间
     private double pauseStartTime;
     private double pauseEndTime;
+    PlayVideo playVideo = null;
 
     //初始化管理器
     public void Init(GameState state, UIGamingForm form, GameDifficulty gameDiff, object param, MusicData musicData)
@@ -127,31 +130,76 @@ public class DanceMgr : IScheduleHandler
         _cors = (Vector3[])table["corners"];
         _safeWidth = (int)table["width"];
         _safeHeight = (int)table["height"];
-
+        //音乐时长
+        _audioLength = musicData.audio.length;
+        //开始时间，结束时间
+        startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
+        endTime = startTime + _audioLength * 1000;
         // Debug.Log("安全区高:" + _safeHeight + ",宽:" + _safeWidth + ",坐标：" + _cors.ToString());
+        if (DataService.GetInstance().Model == 2)
+        {
+            danceRoot = AssetService.GetInstance().LoadInstantiateAsset("Gaming/DanceRoot", LifeType.Manual);
+            danceRoot.RootGo.SetActive(true);
+            musicEnvMgr = danceRoot.RootGo.GetComponent<MusicEnvMgr>();
 
-        danceRoot = AssetService.GetInstance().LoadInstantiateAsset("Gaming/DanceRoot", LifeType.Manual);
-        danceRoot.RootGo.SetActive(true);
-        musicEnvMgr = danceRoot.RootGo.GetComponent<MusicEnvMgr>();
-
+            //播放背景音乐
+            musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
+        }
+        else
+        {
+            startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
+            playVideo = _mainForm.RootPLink.GetCacheComponent(1) as PlayVideo;
+            string videoName = "mountain";
+            if (_gameDiff == GameDifficulty.Easy)
+            {
+                videoName = "mountain";
+            }
+            else if (_gameDiff == GameDifficulty.Normal)
+            {
+                videoName = "ocean";
+            }
+            else
+            {
+                videoName = "starrysky";
+            }
+            playVideo.VideoPlay(videoName, _audioLength, null, null, _audioLength);
+            AudioService.GetInstance().Play(AudioChannelType.MUSIC, "Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name, false);
+        }
+    }
+    //再来一次
+    public void ReTry(MusicData musicData)
+    {
         //音乐时长
         _audioLength = musicData.audio.length;
         //开始时间，结束时间
         startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
         endTime = startTime + _audioLength * 1000;
 
-        //播放背景音乐
-        musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
-    }
-    //再来一次
-    public void ReTry(MusicData musicData)
-    {
-        _audioLength = musicData.audio.length;
-
-         //开始时间
-        startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
-        endTime = startTime + _audioLength * 1000;
-        musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
+        if (DataService.GetInstance().Model == 2)
+        {
+            //播放背景音乐
+            musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
+        }
+        else
+        {
+            playVideo = _mainForm.RootPLink.GetCacheComponent(1) as PlayVideo;
+            string videoName = "mountain";
+            if (_gameDiff == GameDifficulty.Easy)
+            {
+                videoName = "mountain";
+            }
+            else if (_gameDiff == GameDifficulty.Normal)
+            {
+                videoName = "ocean";
+            }
+            else
+            {
+                videoName = "starrysky";
+            }
+            endTime = startTime + _audioLength * 1000;
+            playVideo.VideoPlay(videoName, _audioLength, null, null, _audioLength);
+            AudioService.GetInstance().Play(AudioChannelType.MUSIC, "Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name, false);
+        }
     }
     public void BeginDanceGame()
     {
@@ -193,7 +241,10 @@ public class DanceMgr : IScheduleHandler
         else if (id == _showResultTimer)
         {
             //结束了，进行结算
-            musicEnvMgr.StopSound();
+            if (musicEnvMgr != null)
+            {
+                musicEnvMgr.StopSound();
+            }
             gameState.OnFinishDance(totalScore);
         }
     }
@@ -351,6 +402,12 @@ public class DanceMgr : IScheduleHandler
         {
             AssetService.GetInstance().Unload(danceRoot);
             danceRoot = null;
+
+            musicEnvMgr = null;
+        }
+        else
+        {
+            AudioService.GetInstance().StopChannel(1);
         }
     }
 
@@ -381,6 +438,24 @@ public class DanceMgr : IScheduleHandler
             pauseEndTime = 0;
             pauseStartTime = 0;
         }
-        musicEnvMgr.OnSetGameEnablePause(pause);
+        if (DataService.GetInstance().Model == 2)
+        {
+            if (musicEnvMgr != null)
+            {
+                musicEnvMgr.OnSetGameEnablePause(pause);
+            }
+        }
+        else
+        {
+            if (pause)
+            {
+                playVideo.PauseVideo();
+            }
+            else
+            {
+                playVideo.ContinueVideo();
+            }
+        }
+
     }
 }

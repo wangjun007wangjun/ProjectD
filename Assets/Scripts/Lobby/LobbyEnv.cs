@@ -5,6 +5,7 @@
 *********************************************************************/
 using System.Collections;
 using System.Collections.Generic;
+using Data;
 using Engine.Audio;
 using UnityEngine;
 
@@ -65,6 +66,10 @@ public class LobbyEnv : MonoBehaviour
     {
         StopCoroutine(GridOn());
         StopCoroutine(GridOff());
+        if (DataService.GetInstance().Model == 2)
+        {
+            AudioService.GetInstance().StopChannel(1);
+        }
     }
     // Update is called once per frame
     void Update()

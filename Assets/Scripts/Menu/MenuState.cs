@@ -7,6 +7,7 @@ using Engine.State;
 using Engine.UGUI;
 using Engine.Asset;
 using Data;
+using UnityEngine;
 
 namespace Lobby
 {
@@ -27,10 +28,13 @@ namespace Lobby
         {
             if (_musicCfgAsset == null)
             {
-                DataService.GetInstance().Score.Load();
-
-                _musicCfgAsset = AssetService.GetInstance().LoadInstantiateAsset("Menu/MusicCfg", LifeType.Manual);
-                DataService.GetInstance().MusicDataCfgList = _musicCfgAsset.RootGo.GetComponent<MusicDataCfgList>();
+                if (DataService.GetInstance().MusicDataCfgList == null)
+                {
+                    DataService.GetInstance().Score.Load();
+                    _musicCfgAsset = AssetService.GetInstance().LoadInstantiateAsset("Menu/MusicCfg", LifeType.Manual);
+                    _musicCfgAsset.RootGo.SetActive(true);
+                    DataService.GetInstance().MusicDataCfgList = _musicCfgAsset.RootGo.GetComponent<MusicDataCfgList>();
+                }
             }
             if (_menuForm == null)
             {
@@ -46,11 +50,13 @@ namespace Lobby
         {
             if (key.Equals("OnClickMoShi1"))
             {
-                StateService.Instance.ChangeState(GConst.StateKey.Lobby);
+                DataService.GetInstance().Model = 1;
+                StateService.Instance.ChangeState(GConst.StateKey.Lobby, 1);
             }
             if (key.Equals("OnClickMoShi2"))
             {
-                StateService.Instance.ChangeState(GConst.StateKey.Lobby);
+                DataService.GetInstance().Model = 2;
+                StateService.Instance.ChangeState(GConst.StateKey.Lobby, 2);
             }
         }
 
@@ -58,10 +64,16 @@ namespace Lobby
         {
             if (_musicCfgAsset != null)
             {
-                AssetService.GetInstance().Unload(_musicCfgAsset);
-                _musicCfgAsset = null;
+                if (DataService.GetInstance().Model == 2)
+                {
+                    AssetService.GetInstance().Unload(_musicCfgAsset);
+                    _musicCfgAsset = null;
+                }
+                
             }
             _menuForm.ActiveForm(false);
+            // _menuForm.OnFormRemoved();
+            // _menuForm = null;
         }
 
         public void OnStateChanged(string srcSt, string curSt, object usrData)
