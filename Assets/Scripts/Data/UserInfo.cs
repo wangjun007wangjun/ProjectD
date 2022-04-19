@@ -3,6 +3,8 @@
     author:		OneJun						
     purpose:	用户信息定义								
 *********************************************************************/
+using Net;
+
 namespace Data
 {
 
@@ -11,6 +13,15 @@ namespace Data
     {
         //服务器 玩家Id
         public int PlayerId = 1;
+        //账号Id 游客device id facebook id
+        public string AccountId = "";
+        public string PlayerName = "Player";
+
+        public void InitByRsp(LoginRsp rspData)
+        {
+            PlayerId = rspData.player_id;
+            PlayerName = rspData.name;
+        }
     }
 }
 

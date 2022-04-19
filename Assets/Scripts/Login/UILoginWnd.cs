@@ -25,7 +25,7 @@ public class UILoginForm : UIFormClass
     private float _curProgress = 0f;
     public override string GetPath()
     {
-        return "Fixed/UIUpdateForm";
+        return "Login/UILoginWnd";
     }
 
     /// <summary>

@@ -25,6 +25,8 @@ public class LoginState : IState, IScheduleHandler
     private uint _netCheckTimer;
     private uint _syncTimeTimer;
     private uint _loginRetryTimer;
+    private uint _switchTimer;
+
 
     //最近登录信息
     [System.Serializable]
@@ -55,7 +57,7 @@ public class LoginState : IState, IScheduleHandler
     public void OnStateEnter(object usrData = null)
     {
         //首次安装
-        CheckIsFirstInstall();
+        // CheckIsFirstInstall();
         //
         GLog.LogD("Enter Update Game State");
         _loginForm = UIFormHelper.CreateFormClass<UILoginForm>(null, null, false);
@@ -169,7 +171,48 @@ public class LoginState : IState, IScheduleHandler
 
     private void DoLogin()
     {
-       
+       string localInfo = "";
+        //上次登陆过
+        localInfo = Engine.Res.FileUtil.ReadFileText(S_LastLoginInfoFilePath);
+        //有上次登陆信息
+        if (!string.IsNullOrEmpty(localInfo))
+        {
+            bool isOk = false;
+            try
+            {
+                _lastLoginInfo = JsonUtility.FromJson<LastLoginInfo>(localInfo);
+                if (string.IsNullOrEmpty(_lastLoginInfo.AccountId))
+                {
+                    _lastLoginInfo.AccountId = GetUDID();
+                }
+                isOk = true;
+            }
+            catch (Exception)
+            {
+                isOk = false;
+            }
+            if (isOk && (_lastLoginInfo != null))
+            {
+                //自动登陆
+                DoLoginSession();
+            }
+            else
+            {
+                //游客登录
+                _lastLoginInfo = new LastLoginInfo();
+                _lastLoginInfo.AccountId = GetUDID();
+                _lastLoginInfo.PlayerName = GetRandomGuestName();
+                DoLoginSession();
+            }
+        }
+        else
+        {
+            //游客登录
+            _lastLoginInfo = new LastLoginInfo();
+            _lastLoginInfo.AccountId = GetUDID();
+            _lastLoginInfo.PlayerName = GetRandomGuestName();
+            DoLoginSession();
+        }
     }
 
     // private void OnLoginFormAction(string key, object param)
@@ -233,7 +276,64 @@ public class LoginState : IState, IScheduleHandler
     {
         //UICommon.GetInstance().ShowWaiting("Login", true, "login to server!");
         //
-       
+       LoginReq req = new LoginReq();
+        req.account_id = _lastLoginInfo.AccountId;
+        req.name = _lastLoginInfo.PlayerName;
+        req.device_id = GetUDID();
+        //请求
+        NetService.GetInstance().SendNetPostReq(NetDeclare.LoginAPI, req, this.OnLoginSvrRsp);
+    }
+
+    
+    //登录服务器 回包
+    private void OnLoginSvrRsp(bool isError, string rspStr)
+    {
+        if (isError)
+        {
+            UICommon.GetInstance().ShowBubble("出错：" + rspStr);
+            //UICommon.GetInstance().CleanWaiting();
+            _loginRetryTimer = this.AddTimer(1000, false);
+            return;
+        }
+        LoginRsp loginRsp = JsonUtility.FromJson<LoginRsp>(rspStr);
+        if (loginRsp.code != 0)
+        {
+            UICommon.GetInstance().ShowBubble("出错 code：" + loginRsp.code.ToString());
+
+            GLog.LogE("code:" + loginRsp.code + "   message:" + loginRsp.message);
+            UICommon.GetInstance().CleanWaiting();
+            _loginRetryTimer = this.AddTimer(1000, false);
+            return;
+        }
+        //token
+        NetService.GetInstance().AccessToken = loginRsp.login_token;
+        //自己数据
+        UserInfo Me = DataService.GetInstance().Me;
+        Me.AccountId = _lastLoginInfo.AccountId;
+
+        Me.InitByRsp(loginRsp);
+        //记录上次登录用户信息
+        _lastLoginInfo.PlayerId = Me.PlayerId;
+        string meJson = JsonUtility.ToJson(_lastLoginInfo);
+        byte[] data = System.Text.Encoding.UTF8.GetBytes(meJson);
+        Engine.Res.FileUtil.WriteFile(S_LastLoginInfoFilePath, data, true);
+        //数据处理
+        LoginPostSession(loginRsp);
+    }
+
+    /// <summary>
+    /// 游戏登录成功 后处理 加载各种本地游戏 游戏数据
+    /// </summary>
+    private void LoginPostSession(LoginRsp data)
+    {
+        //大厅
+        UICommon.GetInstance().CleanWaiting();
+
+        var ranDom = 1f;
+        _uiParam["progress"] = ranDom;
+        _loginForm?.UpdateUI("ShowProgress", _uiParam);
+        //
+        _switchTimer = this.AddTimer(1000, false);
     }
 
     public void OnScheduleHandle(ScheduleType type, uint id)
@@ -254,6 +354,19 @@ public class LoginState : IState, IScheduleHandler
         {
             DoLogin();
         }
+        if (id == _switchTimer)
+        {
+            StateService.Instance.ChangeState(GConst.StateKey.Menu);
+        }
     }
-
+    public string GetUDID()
+    {
+        return UnityEngine.SystemInfo.deviceUniqueIdentifier;
+    }
+    
+    private string GetRandomGuestName()
+    {
+        var nameId = UnityEngine.Random.Range(0, 10000000);
+        return "Player_" + nameId;
+    }
 }

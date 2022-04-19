@@ -84,6 +84,7 @@ public class Boot : MonoBehaviour
         StateService.Instance.RegisteState(menu);
         //
         StateService.Instance.ChangeState(GConst.StateKey.Menu);
+        // StateService.Instance.ChangeState(GConst.StateKey.Login);
     }
 
 
