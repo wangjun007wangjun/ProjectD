@@ -12,15 +12,15 @@ namespace Data
     public class UserInfo
     {
         //服务器 玩家Id
-        public int PlayerId = 1;
+        public int PlayerId = -1;
         //账号Id 游客device id facebook id
         public string AccountId = "";
         public string PlayerName = "Player";
 
-        public void InitByRsp(LoginRsp rspData)
+        public void InitByRsp(LoginRspInfo rspData)
         {
-            PlayerId = rspData.player_id;
-            PlayerName = rspData.name;
+            PlayerId = rspData.user.id;
+            PlayerName = rspData.user.name;
         }
     }
 }

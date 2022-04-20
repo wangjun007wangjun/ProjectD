@@ -52,7 +52,7 @@ namespace Net
         /// <param name="api"></param>
         /// <param name="req"></param>
         /// <returns></returns>
-        public uint SendNetPostReq(string api, NetReq req, NetSessionDelegate hander)
+        public uint SendNetPostReq(string api, NetReq req, NetSessionDelegate hander, bool isPost = true)
         {
             string fullUrl = NetDeclare.SERVER_URL + api;
             string bodyStr = string.Empty;
@@ -82,8 +82,15 @@ namespace Net
             session.Handler = hander;
             session.Id = _currentId++;
             //send
-            GGLog.LogE("<color=yellow>[Net SendReq]</color>:API:<color=yellow>{0}</color> Body:{1}", api, bodyStr);
-            session.Begin(x_token, bodyStr, AccessToken);
+            GGLog.LogD("<color=yellow>[Net SendReq]</color>:API:<color=yellow>{0}</color> Body:{1}", api, bodyStr);
+            if(isPost)
+            {
+                session.Begin(x_token, bodyStr, AccessToken);
+            }
+            else
+            {
+                session.Begin2(x_token, bodyStr, AccessToken);
+            }
             _netSessions.Add(session);
             return session.Id;
         }
@@ -159,4 +166,3 @@ namespace Net
         }
     }
 }
-

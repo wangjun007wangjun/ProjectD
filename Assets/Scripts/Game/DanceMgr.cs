@@ -135,6 +135,8 @@ public class DanceMgr : IScheduleHandler
         //开始时间，结束时间
         startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
         endTime = startTime + _audioLength * 1000;
+    // GLog.LogD("开始时间：" + startTime.ToString()+" 结束："+endTime.ToString()+ " 时长："+_audioLength.ToString());
+
         // Debug.Log("安全区高:" + _safeHeight + ",宽:" + _safeWidth + ",坐标：" + _cors.ToString());
         if (DataService.GetInstance().Model == 2)
         {
@@ -174,7 +176,6 @@ public class DanceMgr : IScheduleHandler
         //开始时间，结束时间
         startTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
         endTime = startTime + _audioLength * 1000;
-
         if (DataService.GetInstance().Model == 2)
         {
             //播放背景音乐
@@ -224,7 +225,6 @@ public class DanceMgr : IScheduleHandler
 
             double curDataTime = (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000;
             double nextDataTime = curDataTime + next + 2;
-            // Debug.Log("下次时间："+ next);
 
             //游戏未结束，正常产生
             if (nextDataTime < endTime)

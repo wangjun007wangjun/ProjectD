@@ -20,6 +20,7 @@ public class Boot : MonoBehaviour
     /// </summary>
     protected void Start()
     {
+        GLog.Initialize();
         Screen.sleepTimeout = SleepTimeout.NeverSleep;
         //不销毁
         ExtObject.ExtDontDestroyOnLoad(gameObject);
@@ -83,8 +84,8 @@ public class Boot : MonoBehaviour
         StateService.Instance.RegisteState(gaming);
         StateService.Instance.RegisteState(menu);
         //
-        StateService.Instance.ChangeState(GConst.StateKey.Menu);
-        // StateService.Instance.ChangeState(GConst.StateKey.Login);
+        // StateService.Instance.ChangeState(GConst.StateKey.Menu);
+        StateService.Instance.ChangeState(GConst.StateKey.Login);
     }
 
 

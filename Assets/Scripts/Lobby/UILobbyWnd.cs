@@ -13,6 +13,7 @@ using Engine.PLink;
 using Engine.Schedule;
 using Engine.Audio;
 using Engine.State;
+using TMPro;
 
 namespace Lobby
 {
@@ -26,6 +27,7 @@ namespace Lobby
         private const int _uiAudioSettingBtnButtonIndex = 5;
         private const int _uiBackBtnButtonIndex = 6;
         private const int _uiBgRectTransformIndex = 7;
+        private const int _uiRankBtnButtonIndex = 8;
 
         private Button _uiAudioBtnButton;
         private LoopListView2 _uiScrollViewLoopListView2;
@@ -35,6 +37,10 @@ namespace Lobby
         private Button _uiAudioSettingBtnButton;
         private Button _uiBackBtnButton;
         private RectTransform _uiBgRectTransform;
+        private Button _uiRankBtnButton;
+        private const int _uiPlayerNameTMPTextIndex = 9;
+        private TextMeshProUGUI _uiPlayerNameTMPText;
+
 
 
         private uint _timerFrame2;
@@ -54,6 +60,8 @@ namespace Lobby
             _uiAudioSettingBtnButton = GetComponent(_uiAudioSettingBtnButtonIndex) as Button;
             _uiBackBtnButton = GetComponent(_uiBackBtnButtonIndex) as Button;
             _uiBgRectTransform = GetComponent(_uiBgRectTransformIndex) as RectTransform;
+            _uiRankBtnButton = GetComponent(_uiRankBtnButtonIndex) as Button;
+            _uiPlayerNameTMPText = GetComponent(_uiPlayerNameTMPTextIndex) as TextMeshProUGUI;
 
             _uiAudioBtnButton.onClick.AddListener(() =>
             {
@@ -65,6 +73,10 @@ namespace Lobby
             _uiBackBtnButton.onClick.AddListener(() =>
             {
                 StateService.Instance.ChangeState(GConst.StateKey.Menu);
+            });
+            _uiRankBtnButton.onClick.AddListener(() =>
+            {
+                SendAction("OpenRank");
             });
             _uiAudioSettingBtnButton.onClick.AddListener(() =>
             {
@@ -89,6 +101,8 @@ namespace Lobby
             _uiAudioSettingBtnButton = null;
             _uiBackBtnButton = null;
             _uiBgRectTransform = null;
+            _uiRankBtnButton = null;
+            _uiPlayerNameTMPText = null;
 
         }
         protected override void OnInitialize(object param)
@@ -99,6 +113,7 @@ namespace Lobby
 
             _timerFrame2 = this.AddFrame(1, true);
 
+            _uiPlayerNameTMPText.text = DataService.GetInstance().Me.PlayerName;
             _uiScrollViewLoopListView2.InitListView(-1, OnRefreshListItem);
             _uiScrollViewLoopListView2.MovePanelToItemIndex(0, 0);
         }

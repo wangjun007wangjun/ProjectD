@@ -73,6 +73,10 @@ namespace Engine.TimeSync
             return dtRst;
         }
 
+        public static string GetCurDateTimeStr()
+        {
+            return DateTime.Now.ToLocalTime().ToString("yyyy-MM-dd HH:mm:ss");
+        }
     }
 }
 

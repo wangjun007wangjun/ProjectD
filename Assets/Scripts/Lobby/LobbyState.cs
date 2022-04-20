@@ -13,6 +13,7 @@ namespace Lobby
     public class LobbyState : IState
     {
         private UILobbyForm _lobbyForm;
+        private RankWnd _rankForm;
         private BaseAsset _lobbyAsset;
         private int model = 1;
         public void InitializeState()
@@ -55,6 +56,26 @@ namespace Lobby
                 // Debug.Log("回调EnterGaming");
                 MusicData data = DataService.GetInstance().MusicDataCfgList.list[dataIndex];
                 StateService.Instance.ChangeState(GConst.StateKey.Game, data);
+            }
+            if(key.Equals("OpenRank"))
+            {
+                if (_rankForm == null)
+                {
+                    _rankForm = UIFormHelper.CreateFormClass<RankWnd>(OnRankFormAction, null, true);
+                }
+                else
+                {
+                    _rankForm.ActiveForm(true);
+                }
+            }
+        }
+
+        private void OnRankFormAction(string key, object param)
+        {
+            if(key.Equals("CloseRank"))
+            {
+                UIFormHelper.DisposeFormClass(_rankForm);
+                _rankForm = null;
             }
         }
 

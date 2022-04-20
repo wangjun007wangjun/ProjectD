@@ -3,7 +3,11 @@
     author:		OneJun						
     purpose:	得分信息								
 *********************************************************************/
+using System;
 using System.Collections.Generic;
+using Engine.TimeSync;
+using Engine.UGUI;
+using Net;
 using UnityEngine;
 
 namespace Data
@@ -41,9 +45,9 @@ namespace Data
         public int GetScoreInfoById(int id)
         {
             if (_storage == null)
-{
-    Debug.Log("为空");
-}
+            {
+                Debug.Log("为空");
+            }
             if (_storage.ScoreInfoList != null)
             {
                 ScoreInfo info = _storage.ScoreInfoList.Find((a) => { return a.musicId == id; });
@@ -74,6 +78,7 @@ namespace Data
                 {
                     info.bestScore = score;
                     Dump();
+                    DumpNewScoreToSvr(info);
                 }
             }
             else
@@ -83,8 +88,40 @@ namespace Data
                 infoTemp.musicId = id;
 
                 _storage.ScoreInfoList.Add(infoTemp);
-                
+
                 Dump();
+                DumpNewScoreToSvr(infoTemp);
+            }
+        }
+
+        private void DumpNewScoreToSvr(ScoreInfo info)
+        {
+            //存储到服务器
+            AddNewRankReq req = new AddNewRankReq();
+            RankPlayerInfo score = new RankPlayerInfo();
+            score.name = DataService.GetInstance().Me.PlayerName;
+            score.score = info.bestScore;
+            score.music = info.musicId;
+            score.update_time = TimeHelper.GetCurDateTimeStr();
+            req.score = score;
+            NetService.GetInstance().SendNetPostReq(NetDeclare.UpdateRankAPI, req, this.OnSaveScoreSvrRsp);
+        }
+
+        private void OnSaveScoreSvrRsp(bool isError, string rspJsonStr)
+        {
+            if (isError)
+            {
+                UICommon.GetInstance().ShowBubble(rspJsonStr);
+                return;
+            }
+            AddNewRankRsp rsp = JsonUtility.FromJson<AddNewRankRsp>(rspJsonStr);
+            if (rsp.code != 2000)
+            {
+                UICommon.GetInstance().ShowBubble(rsp.message);
+
+                GLog.LogE("code:" + rsp.code + "   message:" + rsp.message);
+                UICommon.GetInstance().CleanWaiting();
+                return;
             }
         }
     }

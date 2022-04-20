@@ -61,6 +61,33 @@ namespace Net
             _startTime=Time.realtimeSinceStartup;
             #endif
         }
+        public void Begin2(string xtoken, string postJson, string ac)
+        {
+            if (string.IsNullOrEmpty(Url))
+            {
+                GGLog.LogE("NetSession Begin Url Error");
+                _isOver = true;
+                _isError = true;
+            }
+            _worker = new UnityWebRequest(Url, "GET");
+            _worker.SetRequestHeader("Content-Type", "application/json;charset=utf-8");
+            _worker.SetRequestHeader("x-token", xtoken);
+            if (!string.IsNullOrEmpty(ac))
+            {
+                _worker.SetRequestHeader("token", ac);
+            }
+            byte[] body = Encoding.UTF8.GetBytes(postJson);
+            _worker.uploadHandler = new UploadHandlerRaw(body);
+            _worker.downloadHandler = new DownloadHandlerBuffer();
+            _worker.timeout = C_TimeOut;
+
+            _isOver = false;
+            _isError = false;
+            _worker.SendWebRequest();
+            #if APP_DEBUG
+            _startTime=Time.realtimeSinceStartup;
+            #endif
+        }
 
         public void Update()
         {

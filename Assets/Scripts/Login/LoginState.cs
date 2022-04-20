@@ -277,9 +277,12 @@ public class LoginState : IState, IScheduleHandler
         //UICommon.GetInstance().ShowWaiting("Login", true, "login to server!");
         //
        LoginReq req = new LoginReq();
-        req.account_id = _lastLoginInfo.AccountId;
-        req.name = _lastLoginInfo.PlayerName;
-        req.device_id = GetUDID();
+       LoginUser user = new LoginUser();
+       user.id = -1;
+       user.device_id = GetUDID();
+       user.name = _lastLoginInfo.PlayerName;
+        req.user = user;
+        req.token = "";
         //请求
         NetService.GetInstance().SendNetPostReq(NetDeclare.LoginAPI, req, this.OnLoginSvrRsp);
     }
@@ -290,15 +293,15 @@ public class LoginState : IState, IScheduleHandler
     {
         if (isError)
         {
-            UICommon.GetInstance().ShowBubble("出错：" + rspStr);
+            UICommon.GetInstance().ShowBubble(rspStr);
             //UICommon.GetInstance().CleanWaiting();
             _loginRetryTimer = this.AddTimer(1000, false);
             return;
         }
         LoginRsp loginRsp = JsonUtility.FromJson<LoginRsp>(rspStr);
-        if (loginRsp.code != 0)
+        if (loginRsp.code != 2000)
         {
-            UICommon.GetInstance().ShowBubble("出错 code：" + loginRsp.code.ToString());
+            UICommon.GetInstance().ShowBubble(loginRsp.message);
 
             GLog.LogE("code:" + loginRsp.code + "   message:" + loginRsp.message);
             UICommon.GetInstance().CleanWaiting();
@@ -306,12 +309,12 @@ public class LoginState : IState, IScheduleHandler
             return;
         }
         //token
-        NetService.GetInstance().AccessToken = loginRsp.login_token;
+        NetService.GetInstance().AccessToken = loginRsp.token;
         //自己数据
         UserInfo Me = DataService.GetInstance().Me;
         Me.AccountId = _lastLoginInfo.AccountId;
 
-        Me.InitByRsp(loginRsp);
+        Me.InitByRsp(loginRsp.data);
         //记录上次登录用户信息
         _lastLoginInfo.PlayerId = Me.PlayerId;
         string meJson = JsonUtility.ToJson(_lastLoginInfo);
