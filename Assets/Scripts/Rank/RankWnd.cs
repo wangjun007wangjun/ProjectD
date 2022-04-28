@@ -16,16 +16,30 @@ using System.Collections.Generic;
 using Net;
 using System;
 using System.Globalization;
+using TMPro;
 
 public class RankWnd : UIFormClass
 {
     private const int _uiTabBarTabBarIndex = 0;
     private const int _uiScrollViewLoopListView2Index = 1;
     private const int _uiCloseBtnButtonIndex = 2;
+    private const int _uiName1TMPTextIndex = 3;
+    private const int _uiName2TMPTextIndex = 4;
+    private const int _uiName3TMPTextIndex = 5;
+    private const int _uiName4TMPTextIndex = 6;
+    private const int _uiName5TMPTextIndex = 7;
+    private const int _uiName6TMPTextIndex = 8;
 
     private UITabBar _uiTabBarTabBar;
     private LoopListView2 _uiScrollViewLoopListView2;
     private Button _uiCloseBtnButton;
+    private TextMeshProUGUI _uiName1TMPText;
+    private TextMeshProUGUI _uiName2TMPText;
+    private TextMeshProUGUI _uiName3TMPText;
+    private TextMeshProUGUI _uiName4TMPText;
+    private TextMeshProUGUI _uiName5TMPText;
+    private TextMeshProUGUI _uiName6TMPText;
+
 
 
     private Dictionary<int, List<RankPlayerInfo>> rankData = new Dictionary<int, List<RankPlayerInfo>>();
@@ -49,16 +63,31 @@ public class RankWnd : UIFormClass
         _uiTabBarTabBar = GetComponent(_uiTabBarTabBarIndex) as UITabBar;
         _uiScrollViewLoopListView2 = GetComponent(_uiScrollViewLoopListView2Index) as LoopListView2;
         _uiCloseBtnButton = GetComponent(_uiCloseBtnButtonIndex) as Button;
+        _uiName1TMPText = GetComponent(_uiName1TMPTextIndex) as TextMeshProUGUI;
+        _uiName2TMPText = GetComponent(_uiName2TMPTextIndex) as TextMeshProUGUI;
+        _uiName3TMPText = GetComponent(_uiName3TMPTextIndex) as TextMeshProUGUI;
+        _uiName4TMPText = GetComponent(_uiName4TMPTextIndex) as TextMeshProUGUI;
+        _uiName5TMPText = GetComponent(_uiName5TMPTextIndex) as TextMeshProUGUI;
+        _uiName6TMPText = GetComponent(_uiName6TMPTextIndex) as TextMeshProUGUI;
 
         rankData = new Dictionary<int, List<RankPlayerInfo>>();
         curRankData = new List<RankPlayerInfo>();
 
-        _uiCloseBtnButton.onClick.AddListener(() =>{
+        _uiCloseBtnButton.onClick.AddListener(() =>
+        {
             SendAction("CloseRank");
         });
         _uiTabBarTabBar.OnSelectChanged = OnTabChange;
 
         _uiTabBarTabBar.CurSellectedIndex = 0;
+
+        //歌曲名字
+        _uiName1TMPText.text = DataService.GetInstance().MusicDataCfgList.list[0].name;
+        _uiName2TMPText.text = DataService.GetInstance().MusicDataCfgList.list[1].name;
+        _uiName3TMPText.text = DataService.GetInstance().MusicDataCfgList.list[2].name;
+        _uiName4TMPText.text = DataService.GetInstance().MusicDataCfgList.list[3].name;
+        _uiName5TMPText.text = DataService.GetInstance().MusicDataCfgList.list[4].name;
+        _uiName6TMPText.text = DataService.GetInstance().MusicDataCfgList.list[5].name;
     }
 
     protected override void OnUninitialize()
@@ -66,6 +95,13 @@ public class RankWnd : UIFormClass
         _uiTabBarTabBar = null;
         _uiScrollViewLoopListView2 = null;
         _uiCloseBtnButton = null;
+        _uiName1TMPText = null;
+        _uiName2TMPText = null;
+        _uiName3TMPText = null;
+        _uiName4TMPText = null;
+        _uiName5TMPText = null;
+        _uiName6TMPText = null;
+
     }
 
     protected override void OnUpdateUI(string id, object param)
@@ -78,9 +114,10 @@ public class RankWnd : UIFormClass
 
     private void OnTabChange(int index, int tag)
     {
-        if(rankData.ContainsKey(index))
+        int tempIndex = index + DataService.GetInstance().Model * 100;
+        if (rankData.ContainsKey(tempIndex))
         {
-            if(rankData.TryGetValue(index, out curRankData))
+            if (rankData.TryGetValue(tempIndex, out curRankData))
             {
                 if (isInitLoop)
                 {
@@ -99,8 +136,8 @@ public class RankWnd : UIFormClass
         {
             // 请求数据
             RankReq req = new RankReq();
-            req.musicId = index;
-            var url = NetDeclare.RankTotalAPI +index.ToString();
+            req.musicId = tempIndex;
+            var url = NetDeclare.RankTotalAPI + tempIndex.ToString();
 
             UICommon.GetInstance().ShowWaiting("...", true);
             //请求
@@ -119,8 +156,8 @@ public class RankWnd : UIFormClass
                     return;
                 }
 
-                rankData[index] = new List<RankPlayerInfo>(rankRsp.data);
-                curRankData = rankData[index];
+                rankData[tempIndex] = new List<RankPlayerInfo>(rankRsp.data);
+                curRankData = rankData[tempIndex];
                 if (isInitLoop)
                 {
                     _uiScrollViewLoopListView2.SetListItemCount(curRankData.Count);

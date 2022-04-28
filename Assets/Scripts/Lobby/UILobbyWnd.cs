@@ -14,6 +14,7 @@ using Engine.Schedule;
 using Engine.Audio;
 using Engine.State;
 using TMPro;
+using Net;
 
 namespace Lobby
 {
@@ -28,6 +29,9 @@ namespace Lobby
         private const int _uiBackBtnButtonIndex = 6;
         private const int _uiBgRectTransformIndex = 7;
         private const int _uiRankBtnButtonIndex = 8;
+        private const int _uiPlayerNameTMPTextIndex = 9;
+        private const int _uiChangeNameBtnButtonIndex = 10;
+        private const int _uiNameInputTMP_InputFieldIndex = 11;
 
         private Button _uiAudioBtnButton;
         private LoopListView2 _uiScrollViewLoopListView2;
@@ -38,9 +42,9 @@ namespace Lobby
         private Button _uiBackBtnButton;
         private RectTransform _uiBgRectTransform;
         private Button _uiRankBtnButton;
-        private const int _uiPlayerNameTMPTextIndex = 9;
         private TextMeshProUGUI _uiPlayerNameTMPText;
-
+        private Button _uiChangeNameBtnButton;
+        private TMP_InputField _uiNameInputTMP_InputField;
 
 
         private uint _timerFrame2;
@@ -62,6 +66,8 @@ namespace Lobby
             _uiBgRectTransform = GetComponent(_uiBgRectTransformIndex) as RectTransform;
             _uiRankBtnButton = GetComponent(_uiRankBtnButtonIndex) as Button;
             _uiPlayerNameTMPText = GetComponent(_uiPlayerNameTMPTextIndex) as TextMeshProUGUI;
+            _uiChangeNameBtnButton = GetComponent(_uiChangeNameBtnButtonIndex) as Button;
+            _uiNameInputTMP_InputField = GetComponent(_uiNameInputTMP_InputFieldIndex) as TMP_InputField;
 
             _uiAudioBtnButton.onClick.AddListener(() =>
             {
@@ -90,6 +96,35 @@ namespace Lobby
             {
                 AudioService.GetInstance().SetVolumeByChannel(2, a);
             });
+            _uiChangeNameBtnButton.onClick.AddListener(() =>
+        {
+            // 请求数据
+            ChangeNameReq req = new ChangeNameReq();
+            req.id = 0;
+            req.name = _uiNameInputTMP_InputField.text;
+            req.device_id = UnityEngine.SystemInfo.deviceUniqueIdentifier;
+
+            UICommon.GetInstance().ShowWaiting("...", true);
+            //请求
+            NetService.GetInstance().SendNetPostReq(NetDeclare.ChangeName, req, (isError, rspStr) =>
+            {
+                UICommon.GetInstance().CleanWaiting();
+                if (isError)
+                {
+                    UICommon.GetInstance().ShowBubble(rspStr);
+                    return;
+                }
+                NetRsp rsp = JsonUtility.FromJson<NetRsp>(rspStr);
+                if (rsp.code != 2000)
+                {
+                    UICommon.GetInstance().ShowBubble(rsp.message);
+                    return;
+                }
+                DataService.GetInstance().Me.PlayerName = req.name;
+
+                UICommon.GetInstance().ShowBubble(rsp.message);
+            });
+        });
         }
         protected override void OnResourceUnLoaded()
         {
@@ -103,6 +138,8 @@ namespace Lobby
             _uiBgRectTransform = null;
             _uiRankBtnButton = null;
             _uiPlayerNameTMPText = null;
+            _uiChangeNameBtnButton = null;
+            _uiNameInputTMP_InputField = null;
 
         }
         protected override void OnInitialize(object param)
@@ -116,6 +153,8 @@ namespace Lobby
             _uiPlayerNameTMPText.text = DataService.GetInstance().Me.PlayerName;
             _uiScrollViewLoopListView2.InitListView(-1, OnRefreshListItem);
             _uiScrollViewLoopListView2.MovePanelToItemIndex(0, 0);
+
+            _uiNameInputTMP_InputField.text = DataService.GetInstance().Me.PlayerName;
         }
 
         protected override void OnUninitialize()
@@ -139,9 +178,14 @@ namespace Lobby
         {
             if (id.Equals("RefreshAll"))
             {
+                _uiBgMusicDataCfgList = DataService.GetInstance().MusicDataCfgList;
+
                 _uiBgRectTransform.gameObject.SetActive(DataService.GetInstance().Model == 1);
 
                 _uiScrollViewLoopListView2.RefreshAllShownItem();
+
+                _uiPlayerNameTMPText.text = DataService.GetInstance().Me.PlayerName;
+                _uiNameInputTMP_InputField.text = DataService.GetInstance().Me.PlayerName;
             }
         }
         protected override void OnAction(string id, object param)
@@ -150,6 +194,7 @@ namespace Lobby
         }
         LoopListViewItem2 OnRefreshListItem(LoopListView2 listView, int index)
         {
+            int originIndex = index;
             if (index < 0)
             {
                 index = _uiBgMusicDataCfgList.list.Count + ((index + 1) % _uiBgMusicDataCfgList.list.Count) - 1;
@@ -193,7 +238,14 @@ namespace Lobby
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(() =>
             {
-                SendAction("EnterGaming", indexTemp);
+                if(_uiScrollViewLoopListView2.CurSnapNearestItemIndex == originIndex)
+                {
+                    SendAction("EnterGaming", indexTemp);
+                }
+                else
+                {
+                    _uiScrollViewLoopListView2.MovePanelToItemIndex(indexTemp - 2, 0);
+                }
             });
             return item;
         }

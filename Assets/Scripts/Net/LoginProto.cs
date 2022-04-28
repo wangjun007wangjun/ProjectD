@@ -32,4 +32,11 @@ namespace Net
         public LoginRspInfo data;
         public string token;
     }
+    [System.Serializable]
+    public struct ChangeNameReq : NetReq
+    {
+        public int id;
+        public string device_id;
+        public string name;
+    }
 }

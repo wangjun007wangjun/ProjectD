@@ -14,7 +14,8 @@ namespace Lobby
     public class MenuState : IState
     {
         private UIMenuWnd _menuForm;
-        private BaseAsset _musicCfgAsset;
+        private BaseAsset _musicCfgAsset1;
+        private BaseAsset _musicCfgAsset2;
         public void InitializeState()
         {
         }
@@ -26,14 +27,20 @@ namespace Lobby
 
         public void OnStateEnter(object usrData = null)
         {
-            if (_musicCfgAsset == null)
+            if (_musicCfgAsset1 == null)
             {
                 if (DataService.GetInstance().MusicDataCfgList == null)
                 {
-                    DataService.GetInstance().Score.Load();
-                    _musicCfgAsset = AssetService.GetInstance().LoadInstantiateAsset("Menu/MusicCfg", LifeType.Manual);
-                    _musicCfgAsset.RootGo.SetActive(true);
-                    DataService.GetInstance().MusicDataCfgList = _musicCfgAsset.RootGo.GetComponent<MusicDataCfgList>();
+                    _musicCfgAsset1 = AssetService.GetInstance().LoadInstantiateAsset("Menu/MusicCfg1", LifeType.Manual);
+                    _musicCfgAsset1.RootGo.SetActive(true);
+                }
+            }
+            if (_musicCfgAsset2 == null)
+            {
+                if (DataService.GetInstance().MusicDataCfgList == null)
+                {
+                    _musicCfgAsset2 = AssetService.GetInstance().LoadInstantiateAsset("Menu/MusicCfg", LifeType.Manual);
+                    _musicCfgAsset2.RootGo.SetActive(true);
                 }
             }
             if (_menuForm == null)
@@ -51,25 +58,32 @@ namespace Lobby
             if (key.Equals("OnClickMoShi1"))
             {
                 DataService.GetInstance().Model = 1;
+                DataService.GetInstance().Score.Load();
+
+                DataService.GetInstance().MusicDataCfgList = _musicCfgAsset1.RootGo.GetComponent<MusicDataCfgList>();
                 StateService.Instance.ChangeState(GConst.StateKey.Lobby, 1);
             }
             if (key.Equals("OnClickMoShi2"))
             {
                 DataService.GetInstance().Model = 2;
+                DataService.GetInstance().Score.Load();
+
+                DataService.GetInstance().MusicDataCfgList = _musicCfgAsset2.RootGo.GetComponent<MusicDataCfgList>();
                 StateService.Instance.ChangeState(GConst.StateKey.Lobby, 2);
             }
         }
 
         public void OnStateLeave()
         {
-            if (_musicCfgAsset != null)
+            if (_musicCfgAsset1 != null)
             {
                 if (DataService.GetInstance().Model == 2)
                 {
-                    AssetService.GetInstance().Unload(_musicCfgAsset);
-                    _musicCfgAsset = null;
+                    AssetService.GetInstance().Unload(_musicCfgAsset1);
+                    _musicCfgAsset1 = null;
+                    AssetService.GetInstance().Unload(_musicCfgAsset2);
+                    _musicCfgAsset2 = null;
                 }
-                
             }
             _menuForm.ActiveForm(false);
             // _menuForm.OnFormRemoved();

@@ -59,7 +59,7 @@ namespace Data
             string meId = Me.PlayerId.ToString();
             string name = typeof(T).Name;
             //先判断外部是否存在
-            string savePath = Engine.Res.FileUtil.CombinePaths(S_SaveDir, meId, name + ".data");
+            string savePath = Engine.Res.FileUtil.CombinePaths(S_SaveDir, meId, Model.ToString(), name + ".data");
             string jsonData = JsonUtility.ToJson(obj);
             byte[] byteData = System.Text.Encoding.UTF8.GetBytes(jsonData);
             Engine.Res.FileUtil.WriteFile(savePath, byteData, true);
@@ -118,7 +118,7 @@ namespace Data
             }
             string meId = Me.PlayerId.ToString();
             string name = typeof(T).Name;
-            string savePath = Engine.Res.FileUtil.CombinePaths(S_SaveDir, meId, name + ".data");
+            string savePath = Engine.Res.FileUtil.CombinePaths(S_SaveDir, meId, Model.ToString(), name + ".data");
             string jsonStr = Engine.Res.FileUtil.ReadFileText(savePath);
             try
             {

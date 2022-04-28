@@ -46,7 +46,7 @@ namespace Data
         {
             if (_storage == null)
             {
-                Debug.Log("为空");
+                Debug.Log("为空,id:"+id.ToString());
             }
             if (_storage.ScoreInfoList != null)
             {
@@ -101,7 +101,7 @@ namespace Data
             RankPlayerInfo score = new RankPlayerInfo();
             score.name = DataService.GetInstance().Me.PlayerName;
             score.score = info.bestScore;
-            score.music = info.musicId;
+            score.music = info.musicId + DataService.GetInstance().Model * 100;
             score.update_time = TimeHelper.GetCurDateTimeStr();
             req.score = score;
             NetService.GetInstance().SendNetPostReq(NetDeclare.UpdateRankAPI, req, this.OnSaveScoreSvrRsp);

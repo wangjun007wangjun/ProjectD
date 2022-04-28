@@ -52,5 +52,7 @@ namespace Net
         public const string UpdateRankAPI = "/Score/AddNewScore";
         //总排行榜接口
         public const string RankTotalAPI = "/Score/Top20/";
+        //修改用户名
+        public const string ChangeName = "/User/ChangeName";
     }
 }

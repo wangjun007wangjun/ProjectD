@@ -12,6 +12,8 @@ using SuperScrollView;
 using Engine.PLink;
 using Engine.Schedule;
 using Engine.Audio;
+using TMPro;
+using Net;
 
 public class UIMenuWnd : UIFormClass
 {
@@ -26,6 +28,8 @@ public class UIMenuWnd : UIFormClass
     private const int _uiIntroductionPanelRectTransformIndex = 8;
     private const int _uiCloseIntroductionBtnButtonIndex = 9;
     private const int _uiQuitBtnButtonIndex = 10;
+    private const int _uiChangeNameBtnButtonIndex = 11;
+    private const int _uiNameInputTMP_InputFieldIndex = 12;
 
     private Button _uiAudioBtnButton;
     private Button _uiMoShiBtn1Button;
@@ -38,7 +42,8 @@ public class UIMenuWnd : UIFormClass
     private RectTransform _uiIntroductionPanelRectTransform;
     private Button _uiCloseIntroductionBtnButton;
     private Button _uiQuitBtnButton;
-
+    private Button _uiChangeNameBtnButton;
+    private TMP_InputField _uiNameInputTMP_InputField;
 
     public override string GetPath()
     {
@@ -57,6 +62,8 @@ public class UIMenuWnd : UIFormClass
         _uiIntroductionPanelRectTransform = GetComponent(_uiIntroductionPanelRectTransformIndex) as RectTransform;
         _uiCloseIntroductionBtnButton = GetComponent(_uiCloseIntroductionBtnButtonIndex) as Button;
         _uiQuitBtnButton = GetComponent(_uiQuitBtnButtonIndex) as Button;
+        _uiChangeNameBtnButton = GetComponent(_uiChangeNameBtnButtonIndex) as Button;
+        _uiNameInputTMP_InputField = GetComponent(_uiNameInputTMP_InputFieldIndex) as TMP_InputField;
 
         _uiAudioSettingBtnButton.onClick.AddListener(() =>
         {
@@ -96,6 +103,34 @@ public class UIMenuWnd : UIFormClass
         {
             Application.Quit();
         });
+        _uiChangeNameBtnButton.onClick.AddListener(() =>
+        {
+            // 请求数据
+            ChangeNameReq req = new ChangeNameReq();
+            req.id = 0;
+            req.name = _uiNameInputTMP_InputField.text;
+            req.device_id = UnityEngine.SystemInfo.deviceUniqueIdentifier;
+
+            UICommon.GetInstance().ShowWaiting("...", true);
+            //请求
+            NetService.GetInstance().SendNetPostReq(NetDeclare.ChangeName, req, (isError, rspStr) =>
+            {
+                UICommon.GetInstance().CleanWaiting();
+                if (isError)
+                {
+                    UICommon.GetInstance().ShowBubble(rspStr);
+                    return;
+                }
+                NetRsp rsp = JsonUtility.FromJson<NetRsp>(rspStr);
+                if (rsp.code != 2000)
+                {
+                    UICommon.GetInstance().ShowBubble(rsp.message);
+                    return;
+                }
+                DataService.GetInstance().Me.PlayerName = req.name;
+                UICommon.GetInstance().ShowBubble(rsp.message);
+            });
+        });
     }
     protected override void OnResourceUnLoaded()
     {
@@ -110,10 +145,14 @@ public class UIMenuWnd : UIFormClass
         _uiIntroductionPanelRectTransform = null;
         _uiCloseIntroductionBtnButton = null;
         _uiQuitBtnButton = null;
+        _uiChangeNameBtnButton = null;
+        _uiNameInputTMP_InputField = null;
+
 
     }
     protected override void OnInitialize(object param)
     {
+        _uiNameInputTMP_InputField.text = DataService.GetInstance().Me.PlayerName;
     }
 
     protected override void OnUninitialize()

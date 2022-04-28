@@ -145,7 +145,7 @@ public class DanceMgr : IScheduleHandler
             musicEnvMgr = danceRoot.RootGo.GetComponent<MusicEnvMgr>();
 
             //播放背景音乐
-            musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
+            musicEnvMgr.PlaySound("Mp3/Model" + DataService.GetInstance().Model.ToString() + "/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
         }
         else
         {
@@ -165,7 +165,7 @@ public class DanceMgr : IScheduleHandler
                 videoName = "starrysky";
             }
             playVideo.VideoPlay(videoName, _audioLength, null, null, _audioLength);
-            AudioService.GetInstance().Play(AudioChannelType.MUSIC, "Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name, false);
+            AudioService.GetInstance().Play(AudioChannelType.MUSIC, "Mp3/Model" + DataService.GetInstance().Model.ToString() + "/" + musicData.difficulty.ToString() + "/" + musicData.audio.name, false);
         }
     }
     //再来一次
@@ -179,7 +179,7 @@ public class DanceMgr : IScheduleHandler
         if (DataService.GetInstance().Model == 2)
         {
             //播放背景音乐
-            musicEnvMgr.PlaySound("Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
+            musicEnvMgr.PlaySound("Mp3/Model" + DataService.GetInstance().Model.ToString() + "/" + musicData.difficulty.ToString() + "/" + musicData.audio.name);
         }
         else
         {
@@ -199,7 +199,8 @@ public class DanceMgr : IScheduleHandler
             }
             endTime = startTime + _audioLength * 1000;
             playVideo.VideoPlay(videoName, _audioLength, null, null, _audioLength);
-            AudioService.GetInstance().Play(AudioChannelType.MUSIC, "Mp3/" + musicData.difficulty.ToString() + "/" + musicData.audio.name, false);
+            AudioService.GetInstance().Play(AudioChannelType.MUSIC, "Mp3/Model" + DataService.GetInstance().Model.ToString() + "/" + musicData.difficulty.ToString() + "/" + musicData.audio.name, false);
+
         }
     }
     public void BeginDanceGame()
