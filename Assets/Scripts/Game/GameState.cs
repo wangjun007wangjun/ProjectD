@@ -20,6 +20,8 @@ public class GameState : IState
 
     //当前的音乐数据配置
     private MusicData musicData;
+
+    public bool isShoudongPause = false;
     public void InitializeState()
     {
 
@@ -32,6 +34,7 @@ public class GameState : IState
 
     public void OnStateEnter(object usrData = null)
     {
+        isShoudongPause = false;
         musicData = usrData as MusicData;
 
         _danceMgr = new DanceMgr();
@@ -52,6 +55,7 @@ public class GameState : IState
         }
         _danceMgr.UnInit();
         DOTween.KillAll();
+        isShoudongPause = false;
     }
 
     public void OnStateChanged(string srcSt, string curSt, object usrData)
@@ -91,6 +95,7 @@ public class GameState : IState
         else if (key.Equals("GamePause"))
         {
             bool isPause = (bool)param;
+            isShoudongPause = isPause == true;
             _danceMgr.OnSetMusicEnvPause(isPause);
         }
     }
@@ -100,7 +105,10 @@ public class GameState : IState
     }
     public void OnGameContinue()
     {
-        _danceMgr.OnSetMusicEnvPause(false);
+        if(!isShoudongPause)
+        {
+            _danceMgr.OnSetMusicEnvPause(false);
+        }
     }
     public void OnFinishDance(int totalScore)
     {
